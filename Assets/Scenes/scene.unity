@@ -316,7 +316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _worldGenData:
     chunkSize: 124
-    renderDistance: 13
+    renderDistance: 27
     tempTerrainGradient:
       key0:
         serializedVersion: 2
@@ -378,16 +378,16 @@ MonoBehaviour:
         outSlope: 0.021929955
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.61222297
-        value: 0.285783
-        inSlope: 0.8829969
-        outSlope: 0.8829969
+        time: 0.6291195
+        value: 0.27129024
+        inSlope: 0.85627204
+        outSlope: 0.85627204
         tangentMode: 136
       - serializedVersion: 2
-        time: 0.7873245
+        time: 0.8070371
         value: 0.58485746
-        inSlope: 1.8300029
-        outSlope: 1.8300029
+        inSlope: 1.9569204
+        outSlope: 1.9569204
         tangentMode: 34
       - serializedVersion: 2
         time: 1
