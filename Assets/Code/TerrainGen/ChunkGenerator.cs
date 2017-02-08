@@ -328,7 +328,9 @@ public class MeshData
                 _UVCoords[y * vertexSize + x] = new Vector2((float)x / meshSize, (float)y / meshSize);
             }
 
+		bool diagonal = false;
         for (int y = 0; y < meshSize; y++)
+        {
             for (int x = 0; x < meshSize; x++)
             {
                 int currentTileID = y * meshSize + x;
@@ -337,14 +339,34 @@ public class MeshData
 
                 int triangleOffset = currentTileID * 6;
 
-                _triVertIDs[triangleOffset + 0] = triVertOffset + 0;
-                _triVertIDs[triangleOffset + 1] = triVertOffset + vertexSize + 0;
-                _triVertIDs[triangleOffset + 2] = triVertOffset + vertexSize + 1;
+                if (diagonal)
+                {
+                    _triVertIDs[triangleOffset + 0] = triVertOffset + 0;
+                    _triVertIDs[triangleOffset + 1] = triVertOffset + vertexSize + 0;
+                    _triVertIDs[triangleOffset + 2] = triVertOffset + vertexSize + 1;
 
-                _triVertIDs[triangleOffset + 3] = triVertOffset + 0;
-                _triVertIDs[triangleOffset + 4] = triVertOffset + vertexSize + 1;
-                _triVertIDs[triangleOffset + 5] = triVertOffset + 1;
+                    _triVertIDs[triangleOffset + 3] = triVertOffset + 0;
+                    _triVertIDs[triangleOffset + 4] = triVertOffset + vertexSize + 1;
+                    _triVertIDs[triangleOffset + 5] = triVertOffset + 1;
+                }
+
+                else
+                {
+                    _triVertIDs[triangleOffset + 0] = triVertOffset + 0;
+                    _triVertIDs[triangleOffset + 1] = triVertOffset + vertexSize + 0;
+                    _triVertIDs[triangleOffset + 2] = triVertOffset + 1;
+
+                    _triVertIDs[triangleOffset + 3] = triVertOffset + 1;
+                    _triVertIDs[triangleOffset + 4] = triVertOffset + vertexSize + 0;
+                    _triVertIDs[triangleOffset + 5] = triVertOffset + vertexSize + 1;
+                }
+
+                diagonal = !diagonal;
+
             }
+
+            diagonal = !diagonal;
+        }
 
         lock (noiseData.chunkGenerator.meshDataThreadInfoQueue)
             noiseData.chunkGenerator.meshDataThreadInfoQueue.Enqueue(callback);

@@ -315,8 +315,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _worldGenData:
-    chunkSize: 124
-    renderDistance: 27
+    chunkSize: 125
+    renderDistance: 13
     tempTerrainGradient:
       key0:
         serializedVersion: 2
@@ -344,7 +344,7 @@ MonoBehaviour:
         rgba: 16777215
       ctime0: 1157
       ctime1: 2699
-      ctime2: 4433
+      ctime2: 4819
       ctime3: 11372
       ctime4: 22166
       ctime5: 23708
@@ -361,24 +361,7 @@ MonoBehaviour:
       m_Mode: 1
       m_NumColorKeys: 8
       m_NumAlphaKeys: 2
-    tempSeed: 0
-    tempScale: 0
-    tempOctaves: 0
-    tempPersistance: 0
-    tempLacunarity: 0
-    tempRedistribution: 0
-    humidSeed: 0
-    humidScale: 0
-    humidOctaves: 0
-    humidPersistance: 0
-    humidLacunarity: 0
-    humidRedistribution: 0
-    heightSeed: 3
-    heightScale: 160
-    heightOctaves: 12
-    heightPersistance: 0.7
-    heightLacunarity: 1.42
-    heightRedistribution: 1
+    meshHeightMultiplier: 150
     heightMultiplierCurve:
       serializedVersion: 2
       m_Curve:
@@ -397,9 +380,9 @@ MonoBehaviour:
       - serializedVersion: 2
         time: 0.5747943
         value: 0.20969604
-        inSlope: 1.2175275
-        outSlope: 1.2175275
-        tangentMode: 34
+        inSlope: 1.2534761
+        outSlope: 1.2534761
+        tangentMode: 0
       - serializedVersion: 2
         time: 0.7445507
         value: 0.5522488
@@ -415,9 +398,32 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
-    meshHeightMultiplier: 160
+    tempSeed: 0
+    tempScale: 0
+    tempOctaves: 0
+    tempPersistance: 0
+    tempLacunarity: 0
+    tempRedistribution: 0
+    humidSeed: 0
+    humidScale: 0
+    humidOctaves: 0
+    humidPersistance: 0
+    humidLacunarity: 0
+    humidRedistribution: 0
+    heightSeed: 0
+    heightScale: 0
+    heightOctaves: 0
+    heightPersistance: 0
+    heightLacunarity: 0
+    heightRedistribution: 0
+    falloffSeed: 7
+    falloffScale: 400
+    falloffOctaves: 8
+    falloffPersistance: 0.7
+    falloffLacunarity: 1.42
+    falloffRedistribution: 1
     heightBaseFloorOffset: 0
-    heightFalloffDistanceMultiplier: 50
+    heightFalloffDistanceMultiplier: 40
     heightFallOffEdgeSlope: 1
     heightFalloffDropOffSpeed: 0.4
     heightFalloffMultiplierCurve:
@@ -523,4 +529,99 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1873525760
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1873525765}
+  - component: {fileID: 1873525764}
+  - component: {fileID: 1873525763}
+  - component: {fileID: 1873525762}
+  - component: {fileID: 1873525761}
+  m_Layer: 0
+  m_Name: Plane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1873525761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1873525760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a47967eef241f441bfc0cac46611a94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!23 &1873525762
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1873525760}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!64 &1873525763
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1873525760}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 0
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!33 &1873525764
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1873525760}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1873525765
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1873525760}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -182.15051, y: -250.15918, z: -235.47968}
+  m_LocalScale: {x: 100, y: 1, z: 100}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
