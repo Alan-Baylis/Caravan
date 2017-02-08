@@ -276,6 +276,10 @@ public class NoiseData
             worldGenData.heightFalloffMultiplierCurve
         );
 
+        _falloffMap = Noise.GenerateFalloffMap(_falloffMap);
+
+        _heightMap = Noise.ApplyFalloffMap(_heightMap, _falloffMap);
+
         lock (chunkGenerator.noiseDataThreadInfoQueue)
             chunkGenerator.noiseDataThreadInfoQueue.Enqueue(callback);
     }

@@ -316,7 +316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _worldGenData:
     chunkSize: 124
-    renderDistance: 27
+    renderDistance: 13
     tempTerrainGradient:
       key0:
         serializedVersion: 2
@@ -342,13 +342,13 @@ MonoBehaviour:
       key7:
         serializedVersion: 2
         rgba: 16777215
-      ctime0: 1157
-      ctime1: 2699
-      ctime2: 4433
+      ctime0: 66
+      ctime1: 3662
+      ctime2: 5397
       ctime3: 11372
-      ctime4: 22166
-      ctime5: 23708
-      ctime6: 45104
+      ctime4: 21974
+      ctime5: 23516
+      ctime6: 49344
       ctime7: 65535
       atime0: 0
       atime1: 65535
@@ -361,6 +361,43 @@ MonoBehaviour:
       m_Mode: 1
       m_NumColorKeys: 8
       m_NumAlphaKeys: 2
+    meshHeightMultiplier: 100
+    heightMultiplierCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0.050976757
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.15572602
+        value: 0.02715797
+        inSlope: 0.021929955
+        outSlope: 0.021929955
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.61222297
+        value: 0.285783
+        inSlope: 0.8829969
+        outSlope: 0.8829969
+        tangentMode: 136
+      - serializedVersion: 2
+        time: 0.7873245
+        value: 0.58485746
+        inSlope: 1.8300029
+        outSlope: 1.8300029
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 2
+        outSlope: 2
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
     tempSeed: 0
     tempScale: 0
     tempOctaves: 0
@@ -373,49 +410,18 @@ MonoBehaviour:
     humidPersistance: 0
     humidLacunarity: 0
     humidRedistribution: 0
-    heightSeed: 3
+    heightSeed: 8
     heightScale: 160
     heightOctaves: 12
     heightPersistance: 0.7
     heightLacunarity: 1.42
-    heightRedistribution: 1
-    heightMultiplierCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0.10246558
-        value: 0.01266522
-        inSlope: 0.021929955
-        outSlope: 0.021929955
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 0.5747943
-        value: 0.20969604
-        inSlope: 1.2175275
-        outSlope: 1.2175275
-        tangentMode: 34
-      - serializedVersion: 2
-        time: 0.7445507
-        value: 0.5522488
-        inSlope: 2.4115424
-        outSlope: 2.4115424
-        tangentMode: 34
-      - serializedVersion: 2
-        time: 0.9041667
-        value: 1
-        inSlope: 2
-        outSlope: 2
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
-    meshHeightMultiplier: 160
+    heightRedistribution: 1.2
+    falloffSeed: 4
+    falloffScale: 500
+    falloffOctaves: 12
+    falloffPersistance: 0.7
+    falloffLacunarity: 1.42
+    falloffRedistribution: 0.3
     heightBaseFloorOffset: 0
     heightFalloffDistanceMultiplier: 50
     heightFallOffEdgeSlope: 1

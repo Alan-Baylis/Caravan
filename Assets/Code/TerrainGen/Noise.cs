@@ -94,9 +94,13 @@ public class Noise
         for (int y = 0; y < mapSize; y++)
             for (int x = 0; x < mapSize; x++)
             {
+                noiseMap[x, y] += redistribution;
+
                 float normalizedHeight = (noiseMap[x, y] + 1) / maxPossibleHeight;
                 noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, int.MaxValue);
             }
+
+        
 
         Data.Parameters usedParameters = new Data.Parameters(seed, mapSize, octaves, scale, persistance, lacunarity, redistribution, mapOffset);
         Data newData = new Data(usedParameters, noiseMap);
@@ -110,7 +114,7 @@ public class Noise
             for (int x = 0; x < inFalloffNoiseData.parameters.size; x++)
             {
                 float vertexDistanceFromCenter = Mathf.Pow(inFalloffNoiseData.parameters.offset.x * inFalloffNoiseData.parameters.size + x, 2) + Mathf.Pow(inFalloffNoiseData.parameters.offset.y * inFalloffNoiseData.parameters.size - y, 2);
-                float normalizedDistance = Mathf.InverseLerp(0, 10000 * 4, vertexDistanceFromCenter);
+                float normalizedDistance = Mathf.InverseLerp(0, 10000 * 100, vertexDistanceFromCenter);
 
                 inFalloffNoiseData.noise[x,y] += normalizedDistance;
             }
@@ -122,12 +126,12 @@ public class Noise
     {
         for (int y = 0; y < noiseData.parameters.size; y++)
             for (int x = 0; x < noiseData.parameters.size; x++)
-            {
                 noiseData.noise[x,y] -= falloffData.noise[x, y];
-            }
 
         return noiseData;
     }
 }
 
 
+// TODO: Remove all traces of redistribution
+// TODO: Look over the WorldSettings stuff
