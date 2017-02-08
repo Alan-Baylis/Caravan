@@ -45,6 +45,8 @@ public class World : MonoBehaviour
         public int chunkSize;
         public int renderDistance;            // Never an even number
         public Gradient tempTerrainGradient;  // TODO: Replace this with texture shader stuffs
+        public float meshHeightMultiplier;
+        public AnimationCurve heightMultiplierCurve;
 
         [Header("Temparature Map Settings")]
         public int tempSeed;
@@ -70,9 +72,15 @@ public class World : MonoBehaviour
         public float heightLacunarity;
         public float heightRedistribution;
 
-        public AnimationCurve heightMultiplierCurve;
-        public float meshHeightMultiplier;
+        [Header("Falloff Map Settings")]
+        public int falloffSeed;
+        public int falloffScale;
+        public int falloffOctaves;
+        public float falloffPersistance;
+        public float falloffLacunarity;
+        public float falloffRedistribution;
 
+        [Header("Old shit")]
         public float heightBaseFloorOffset;
         public float heightFalloffDistanceMultiplier;
         public float heightFallOffEdgeSlope;

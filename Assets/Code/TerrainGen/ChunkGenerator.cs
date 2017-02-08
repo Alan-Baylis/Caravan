@@ -173,22 +173,28 @@ public class NoiseData
     public readonly World.WorldGenData worldGenData;
     public readonly ChunkGenerator chunkGenerator;
 
-    private float[,] _tempMap;
-    public float[,] tempMap
+    private Noise.Data _tempMap;
+    public  Noise.Data tempMap
     {
         get { return _tempMap; }
     }
 
-    private float[,] _humidMap;
-    public float[,] humidMap
+    private Noise.Data _humidMap;
+    public  Noise.Data humidMap
     {
         get { return _humidMap; }
     }
 
-    private float[,] _heightMap;
-    public float[,] heightMap
+    private Noise.Data _heightMap;
+    public  Noise.Data heightMap
     {
         get { return _heightMap; }
+    }
+
+    private Noise.Data _falloffMap;
+    public Noise.Data falloffMap
+    {
+        get { return _falloffMap; }
     }
 
     // Constructor
@@ -202,7 +208,7 @@ public class NoiseData
     // External methods
     public void Generate(Action callback)
     {
-        _tempMap = Noise.GenerateNoiseMap
+        _tempMap = Noise.GenerateNoiseData
         (
             worldGenData.tempSeed,
             worldGenData.chunkSize,
@@ -219,7 +225,7 @@ public class NoiseData
             worldGenData.heightFalloffMultiplierCurve
         );
 
-        _humidMap = Noise.GenerateNoiseMap
+        _humidMap = Noise.GenerateNoiseData
         (
             worldGenData.humidSeed,
             worldGenData.chunkSize,
@@ -236,7 +242,7 @@ public class NoiseData
             worldGenData.heightFalloffMultiplierCurve
         );
 
-        _heightMap = Noise.GenerateNoiseMap
+        _heightMap = Noise.GenerateNoiseData
         (
             worldGenData.heightSeed,
             worldGenData.chunkSize,
@@ -246,6 +252,23 @@ public class NoiseData
             worldGenData.heightPersistance,
             worldGenData.heightLacunarity,
             worldGenData.heightRedistribution,
+            worldGenData.heightBaseFloorOffset,
+            worldGenData.heightFalloffDistanceMultiplier,
+            worldGenData.heightFalloffDropOffSpeed,
+            worldGenData.heightFallOffEdgeSlope,
+            worldGenData.heightFalloffMultiplierCurve
+        );
+
+        _falloffMap = Noise.GenerateNoiseData
+        (
+            worldGenData.falloffSeed,
+            worldGenData.chunkSize,
+            chunkCoords,
+            worldGenData.falloffOctaves,
+            worldGenData.falloffScale,
+            worldGenData.falloffPersistance,
+            worldGenData.falloffLacunarity,
+            worldGenData.falloffRedistribution,
             worldGenData.heightBaseFloorOffset,
             worldGenData.heightFalloffDistanceMultiplier,
             worldGenData.heightFalloffDropOffSpeed,
@@ -317,7 +340,7 @@ public class MeshData
     {
         AnimationCurve heightMultiplierCurve = new AnimationCurve(noiseData.worldGenData.heightMultiplierCurve.keys);
         float meshHeightMultiplier = noiseData.worldGenData.meshHeightMultiplier;
-        float[,] heightMap = noiseData.heightMap;
+        float[,] heightMap = noiseData.heightMap.noise;
         Vector3 upVector = Vector3.up;
 
         for (int y = 0; y < vertexSize; y++)
@@ -395,7 +418,7 @@ public class TextureData
     {
         int textureSize = noiseData.worldGenData.chunkSize;
         Gradient tempTerrainGradient = noiseData.worldGenData.tempTerrainGradient;
-        float[,] heightMap = noiseData.heightMap;
+        float[,] heightMap = noiseData.heightMap.noise;
 
         // Calculate colormap
         _colorMap = new Color[textureSize * textureSize];

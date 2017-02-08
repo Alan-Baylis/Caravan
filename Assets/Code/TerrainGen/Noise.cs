@@ -3,7 +3,43 @@ using System.Collections;
 
 public class Noise
 {
-    public static float[,] GenerateNoiseMap(int seed, int mapSize, Vector2 mapOffset, int octaves, float scale, float persistance, float lacunarity, float redistribution, float baseFloorOffset, float falloffDistanceMultiplier, float falloffDropOffSpeed, float falloffEdgeSlope, AnimationCurve falloffMultiplierCurve)
+    public struct Data
+    {
+        public float[,] noise;
+
+        public Parameters parameters;
+        public struct Parameters
+        {
+            public int seed;
+            public int size;
+            public int octaves;
+            public float scale;
+            public float persistance;
+            public float lacunarity;
+            public float redistribution;
+            public Vector2 offset;
+
+            public Parameters(int inSeed, int inSize, int inOctaves, float inScale, float inPersistance, float inLacunarity, float inRedistribution, Vector2 inOffset)
+            {
+                seed = inSeed;
+                size = inSize;
+                octaves = inOctaves;
+                scale = inScale;
+                persistance = inPersistance;
+                lacunarity = inLacunarity;
+                redistribution = inRedistribution;
+                offset = inOffset;
+            }
+        }
+
+        public Data(Parameters inParameters, float[,] inNoise)
+        {
+            parameters = inParameters;
+            noise = inNoise;
+        }
+    }
+
+    static public Data GenerateNoiseData(int seed, int mapSize, Vector2 mapOffset, int octaves, float scale, float persistance, float lacunarity, float redistribution, float baseFloorOffset, float falloffDistanceMultiplier, float falloffDropOffSpeed, float falloffEdgeSlope, AnimationCurve falloffMultiplierCurve)
     {
         float maxPossibleHeight = 0;
         float amplitude = 1;
@@ -21,9 +57,6 @@ public class Noise
         }
 
         mapSize += 1;
-
-        if (scale <= 0)
-            scale = 0.0001f;
 
         float maxNoiseHeight = float.MinValue;
         float minNoiseHeight = float.MaxValue;
@@ -51,10 +84,8 @@ public class Noise
                     frequency *= lacunarity;
                 }
 
-                if (noiseHeight > maxNoiseHeight)
-                    maxNoiseHeight = noiseHeight;
-                else if (noiseHeight < minNoiseHeight)
-                    minNoiseHeight = noiseHeight;
+                if (noiseHeight > maxNoiseHeight) maxNoiseHeight = noiseHeight;
+                if (noiseHeight < minNoiseHeight) minNoiseHeight = noiseHeight;
 
                 noiseMap[x, y] = noiseHeight;
             }
@@ -66,24 +97,37 @@ public class Noise
                 float normalizedHeight = (noiseMap[x, y] + 1) / maxPossibleHeight;
                 noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, int.MaxValue);
             }
-        
-        // Apply redistribution
-        for (int y = 0; y < mapSize; y++)
-            for (int x = 0; x < mapSize; x++)
-                noiseMap[x, y] = Mathf.Pow(noiseMap[x, y], redistribution);
 
-        AnimationCurve falloffMultiplier = new AnimationCurve(falloffMultiplierCurve.keys);
-        for (int y = 0; y < mapSize; y++)
-            for (int x = 0; x < mapSize; x++)
+        Data.Parameters usedParameters = new Data.Parameters(seed, mapSize, octaves, scale, persistance, lacunarity, redistribution, mapOffset);
+        Data newData = new Data(usedParameters, noiseMap);
+
+        return newData;
+    }
+
+    static public Data GenerateFalloffMap(Data inFalloffNoiseData)
+    {
+        for (int y = 0; y < inFalloffNoiseData.parameters.size; y++)
+            for (int x = 0; x < inFalloffNoiseData.parameters.size; x++)
             {
-                float vertexDistanceFromCenter = Mathf.Pow(mapOffset.x * mapSize + x, 2) + Mathf.Pow(mapOffset.y * mapSize - y, 2);
-                float normalizedDistance = Mathf.InverseLerp(0, 10000 * falloffDistanceMultiplier, vertexDistanceFromCenter);
+                float vertexDistanceFromCenter = Mathf.Pow(inFalloffNoiseData.parameters.offset.x * inFalloffNoiseData.parameters.size + x, 2) + Mathf.Pow(inFalloffNoiseData.parameters.offset.y * inFalloffNoiseData.parameters.size - y, 2);
+                float normalizedDistance = Mathf.InverseLerp(0, 10000 * 4, vertexDistanceFromCenter);
 
-                normalizedDistance = falloffMultiplier.Evaluate(normalizedDistance);
-
-                noiseMap[x, y] = (noiseMap[x, y] + baseFloorOffset) * (1 - falloffEdgeSlope * Mathf.Pow(normalizedDistance, falloffDropOffSpeed));
+                inFalloffNoiseData.noise[x,y] += normalizedDistance;
             }
 
-        return noiseMap;
+        return inFalloffNoiseData;
+    }
+
+    static public Data ApplyFalloffMap(Data noiseData, Data falloffData)
+    {
+        for (int y = 0; y < noiseData.parameters.size; y++)
+            for (int x = 0; x < noiseData.parameters.size; x++)
+            {
+                noiseData.noise[x,y] -= falloffData.noise[x, y];
+            }
+
+        return noiseData;
     }
 }
+
+
