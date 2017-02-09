@@ -39,49 +39,61 @@ public class Noise
         }
     }
 
-    static public Data GenerateNoiseData(int seed, int mapSize, Vector2 mapOffset, int octaves, float scale, float persistance, float lacunarity, float redistribution)
+    /// <summary>
+    /// Returns a Noise.Data containing a noise map generated from the parameter values, and the paremeters used to generate the data
+    /// </summary>
+    /// <param name="inSeed"></param>
+    /// <param name="inSize"></param>
+    /// <param name="inOffset"></param>
+    /// <param name="inOctaves"></param>
+    /// <param name="inScale"></param>
+    /// <param name="inPersistance"></param>
+    /// <param name="inLacunarity"></param>
+    /// <param name="inRedistribution"></param>
+    /// <returns></returns>
+    static public Data GenerateNoiseData(int inSeed, int inSize, Vector2 inOffset, int inOctaves, float inScale, float inPersistance, float inLacunarity, float inRedistribution)
     {
         float maxPossibleHeight = 0;
         float amplitude = 1;
 
-        System.Random rng = new System.Random(seed);
-        Vector2[] octaveOffsets = new Vector2[octaves];
-        for (int i = 0; i < octaves; i++)
+        System.Random rng = new System.Random(inSeed);
+        Vector2[] octaveOffsets = new Vector2[inOctaves];
+        for (int i = 0; i < inOctaves; i++)
         {
-            float octaveOffsetX = rng.Next(-100000, 100000) + (mapOffset.x * mapSize);
-            float octaveOffsetY = rng.Next(-100000, 100000) - (mapOffset.y * mapSize);
+            float octaveOffsetX = rng.Next(-100000, 100000) + (inOffset.x * inSize);
+            float octaveOffsetY = rng.Next(-100000, 100000) - (inOffset.y * inSize);
             octaveOffsets[i] = new Vector2(octaveOffsetX, octaveOffsetY);
 
             maxPossibleHeight += amplitude;
-            amplitude *= persistance;
+            amplitude *= inPersistance;
         }
 
-        mapSize += 1;
+        inSize += 1;
 
         float maxNoiseHeight = float.MinValue;
         float minNoiseHeight = float.MaxValue;
 
-        float[,] noiseMap = new float[mapSize, mapSize];
+        float[,] noiseMap = new float[inSize, inSize];
 
-        float halfSize = mapSize / 2f;
+        float halfSize = inSize / 2f;
 
-        for (int y = 0; y < mapSize; y++)
-            for (int x = 0; x < mapSize; x++)
+        for (int y = 0; y < inSize; y++)
+            for (int x = 0; x < inSize; x++)
             {
                 amplitude = 1;
                 float frequency = 1;
                 float noiseHeight = 0;
 
-                for (int i = 0; i < octaves; i++)
+                for (int i = 0; i < inOctaves; i++)
                 {
-                    float sampleX = (x - halfSize + octaveOffsets[i].x) / scale * frequency;
-                    float sampleY = (y - halfSize + octaveOffsets[i].y) / scale * frequency;
+                    float sampleX = (x - halfSize + octaveOffsets[i].x) / inScale * frequency;
+                    float sampleY = (y - halfSize + octaveOffsets[i].y) / inScale * frequency;
 
                     float perlinValue = Mathf.PerlinNoise(sampleX, sampleY) * 2 - 1;
                     noiseHeight += perlinValue * amplitude;
 
-                    amplitude *= persistance;
-                    frequency *= lacunarity;
+                    amplitude *= inPersistance;
+                    frequency *= inLacunarity;
                 }
 
                 if (noiseHeight > maxNoiseHeight) maxNoiseHeight = noiseHeight;
@@ -91,10 +103,10 @@ public class Noise
             }
 
         // Normalize noise map (-1 to 1) -> (0 to 1)
-        for (int y = 0; y < mapSize; y++)
-            for (int x = 0; x < mapSize; x++)
+        for (int y = 0; y < inSize; y++)
+            for (int x = 0; x < inSize; x++)
             {
-                noiseMap[x, y] += redistribution;
+                noiseMap[x, y] += inRedistribution;
 
                 float normalizedHeight = (noiseMap[x, y] + 1) / maxPossibleHeight;
                 noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, int.MaxValue);
@@ -102,12 +114,18 @@ public class Noise
 
         
 
-        Data.Parameters usedParameters = new Data.Parameters(seed, mapSize, octaves, scale, persistance, lacunarity, redistribution, mapOffset);
+        Data.Parameters usedParameters = new Data.Parameters(inSeed, inSize, inOctaves, inScale, inPersistance, inLacunarity, inRedistribution, inOffset);
         Data newData = new Data(usedParameters, noiseMap);
 
         return newData;
     }
 
+
+    /// <summary>
+    /// Generates a falloff map by linerarily decreasing the values of the noise map passed through the parameter depending on distance from center
+    /// </summary>
+    /// <param name="inFalloffNoiseData"></param>
+    /// <returns></returns>
     static public Data GenerateFalloffMap(Data inFalloffNoiseData)
     {
         for (int y = 0; y < inFalloffNoiseData.parameters.size; y++)
@@ -122,6 +140,13 @@ public class Noise
         return inFalloffNoiseData;
     }
 
+
+    /// <summary>
+    /// Applies falloff map to the noise map passed through the parameter using the falloff map passed through the parameter
+    /// </summary>
+    /// <param name="noiseData"></param>
+    /// <param name="falloffData"></param>
+    /// <returns></returns>
     static public Data ApplyFalloffMap(Data noiseData, Data falloffData)
     {
         for (int y = 0; y < noiseData.parameters.size; y++)
