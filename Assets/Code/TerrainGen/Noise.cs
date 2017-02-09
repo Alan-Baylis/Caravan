@@ -156,7 +156,3 @@ public class Noise
         return noiseData;
     }
 }
-
-
-// TODO: Remove all traces of redistribution
-// TODO: Look over the WorldSettings stuff
