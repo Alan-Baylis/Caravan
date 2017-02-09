@@ -316,7 +316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _worldGenData:
     chunkSize: 124
-    renderDistance: 27
+    renderDistance: 13
     tempTerrainGradient:
       key0:
         serializedVersion: 2
@@ -346,8 +346,8 @@ MonoBehaviour:
       ctime1: 3662
       ctime2: 5397
       ctime3: 11372
-      ctime4: 21974
-      ctime5: 23516
+      ctime4: 19468
+      ctime5: 21781
       ctime6: 49344
       ctime7: 65535
       atime0: 0
@@ -373,21 +373,33 @@ MonoBehaviour:
         tangentMode: 0
       - serializedVersion: 2
         time: 0.15572602
-        value: 0.02715797
+        value: 0.023534782
         inSlope: 0.021929955
         outSlope: 0.021929955
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.6291195
-        value: 0.27129024
-        inSlope: 0.85627204
-        outSlope: 0.85627204
-        tangentMode: 136
+        time: 0.39062953
+        value: 0.06950751
+        inSlope: 0.4223734
+        outSlope: 0.4223734
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.46360302
+        value: 0.12300241
+        inSlope: 0.43499538
+        outSlope: 0.43499538
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.6319356
+        value: 0.27853662
+        inSlope: 1.3366799
+        outSlope: 1.3366799
+        tangentMode: 34
       - serializedVersion: 2
         time: 0.8070371
         value: 0.58485746
-        inSlope: 1.9569204
-        outSlope: 1.9569204
+        inSlope: 1.9504006
+        outSlope: 1.9504006
         tangentMode: 34
       - serializedVersion: 2
         time: 1
@@ -410,7 +422,7 @@ MonoBehaviour:
     humidPersistance: 0
     humidLacunarity: 0
     humidRedistribution: 0
-    heightSeed: 8
+    heightSeed: 3
     heightScale: 160
     heightOctaves: 12
     heightPersistance: 0.7
@@ -421,7 +433,7 @@ MonoBehaviour:
     falloffOctaves: 12
     falloffPersistance: 0.7
     falloffLacunarity: 1.42
-    falloffRedistribution: 0.3
+    falloffRedistribution: 0.2
     heightBaseFloorOffset: 0
     heightFalloffDistanceMultiplier: 50
     heightFallOffEdgeSlope: 1
