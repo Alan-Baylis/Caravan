@@ -39,7 +39,7 @@ public class Noise
         }
     }
 
-    static public Data GenerateNoiseData(int seed, int mapSize, Vector2 mapOffset, int octaves, float scale, float persistance, float lacunarity, float redistribution, float baseFloorOffset, float falloffDistanceMultiplier, float falloffDropOffSpeed, float falloffEdgeSlope, AnimationCurve falloffMultiplierCurve)
+    static public Data GenerateNoiseData(int seed, int mapSize, Vector2 mapOffset, int octaves, float scale, float persistance, float lacunarity, float redistribution)
     {
         float maxPossibleHeight = 0;
         float amplitude = 1;

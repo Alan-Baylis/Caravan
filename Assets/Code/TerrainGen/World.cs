@@ -79,13 +79,6 @@ public class World : MonoBehaviour
         public float falloffPersistance;
         public float falloffLacunarity;
         public float falloffRedistribution;
-
-        [Header("Old shit")]
-        public float heightBaseFloorOffset;
-        public float heightFalloffDistanceMultiplier;
-        public float heightFallOffEdgeSlope;
-        public float heightFalloffDropOffSpeed;
-        public AnimationCurve heightFalloffMultiplierCurve;
     }
 
     private ChunkGenerator _chunkGenerator;

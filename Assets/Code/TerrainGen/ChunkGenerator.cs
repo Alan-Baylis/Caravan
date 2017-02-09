@@ -217,12 +217,7 @@ public class NoiseData
             worldGenData.tempScale,
             worldGenData.tempPersistance,
             worldGenData.tempLacunarity,
-            worldGenData.tempRedistribution,
-            worldGenData.heightBaseFloorOffset,
-            worldGenData.heightFalloffDistanceMultiplier,
-            worldGenData.heightFalloffDropOffSpeed,
-            worldGenData.heightFallOffEdgeSlope,
-            worldGenData.heightFalloffMultiplierCurve
+            worldGenData.tempRedistribution
         );
 
         _humidMap = Noise.GenerateNoiseData
@@ -234,12 +229,7 @@ public class NoiseData
             worldGenData.humidScale,
             worldGenData.humidPersistance,
             worldGenData.humidLacunarity,
-            worldGenData.humidRedistribution,
-            worldGenData.heightBaseFloorOffset,
-            worldGenData.heightFalloffDistanceMultiplier,
-            worldGenData.heightFalloffDropOffSpeed,
-            worldGenData.heightFallOffEdgeSlope,
-            worldGenData.heightFalloffMultiplierCurve
+            worldGenData.humidRedistribution
         );
 
         _heightMap = Noise.GenerateNoiseData
@@ -251,12 +241,7 @@ public class NoiseData
             worldGenData.heightScale,
             worldGenData.heightPersistance,
             worldGenData.heightLacunarity,
-            worldGenData.heightRedistribution,
-            worldGenData.heightBaseFloorOffset,
-            worldGenData.heightFalloffDistanceMultiplier,
-            worldGenData.heightFalloffDropOffSpeed,
-            worldGenData.heightFallOffEdgeSlope,
-            worldGenData.heightFalloffMultiplierCurve
+            worldGenData.heightRedistribution
         );
 
         _falloffMap = Noise.GenerateNoiseData
@@ -268,12 +253,7 @@ public class NoiseData
             worldGenData.falloffScale,
             worldGenData.falloffPersistance,
             worldGenData.falloffLacunarity,
-            worldGenData.falloffRedistribution,
-            worldGenData.heightBaseFloorOffset,
-            worldGenData.heightFalloffDistanceMultiplier,
-            worldGenData.heightFalloffDropOffSpeed,
-            worldGenData.heightFallOffEdgeSlope,
-            worldGenData.heightFalloffMultiplierCurve
+            worldGenData.falloffRedistribution
         );
 
         _falloffMap = Noise.GenerateFalloffMap(_falloffMap);
