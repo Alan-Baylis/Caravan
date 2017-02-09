@@ -41,21 +41,21 @@ public class World : MonoBehaviour
     public struct WorldGenData
     {
         [Header("World Settings")]
-        [Range(16, 125)]
-        public int chunkSize;
-        public int renderDistance;            // Never an even number
-        public Gradient tempTerrainGradient;  // TODO: Replace this with texture shader stuffs
-        public float meshHeightMultiplier;
-        public AnimationCurve heightMultiplierCurve;
+        [Range(16, 124)]
+        public int chunkSize;                           // Chunk size in quads
+        public int renderDistance;                      // Render distance in chunks. Should be an odd number.
+        public Gradient tempTerrainGradient;            // Gradient used in order to color the terrain
+        public float meshHeightMultiplier;              // Number used to determine how much the height map affects the terrain mesh
+        public AnimationCurve heightMultiplierCurve;    // Curve used to determine how much the height map affects the terrain mesh at different values
 
         [Header("Temparature Map Settings")]
-        public int tempSeed;
-        public int tempScale;
-        public int tempOctaves;
-        public float tempPersistance;
-        public float tempLacunarity;
-        public float tempRedistribution;
-
+        public int tempSeed;                            // Number which is the "ID" of the generation. Same seed will always result in the same generation
+        public int tempScale;                           // Determines how "zoomed in" the noise is
+        public int tempOctaves;                         // Determines how detailed the noise is. The more octaves, the more details
+        public float tempPersistance;                   // TODO: Write comment
+        public float tempLacunarity;                    // TODO: Write comment
+        public float tempRedistribution;                // Raises the overall height of the noise
+                                                        // TODO: Add value that raises the minimum cap of noise values
         [Header("Humidity Map Settings")]
         public int humidSeed;
         public int humidScale;
