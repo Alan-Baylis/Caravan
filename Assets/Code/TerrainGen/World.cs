@@ -214,3 +214,12 @@ public class World : MonoBehaviour
 // TODO: Rewrite the way chunks to delete and generate is determined
 // TODO: Implement BIOMES ALREADY AAH
 // TODO: See if the regenerate Texture / Mesh methods still work or can be repaired if they don't
+
+/* TODO LIST */
+/*
+ *  - Every quad is represented by the values of its top left vertex. Assign every vertex a specific biome.
+ *  - Have biomes use specific terrain gen values
+ *  - Implement thermal erosion
+ *  - Implement hydraulic eriosion
+ *  - Rewrite how the delete and generation queues are populated
+ */

@@ -345,9 +345,9 @@ MonoBehaviour:
       ctime0: 66
       ctime1: 3662
       ctime2: 5397
-      ctime3: 11372
-      ctime4: 19468
-      ctime5: 21781
+      ctime3: 13107
+      ctime4: 23130
+      ctime5: 26985
       ctime6: 49344
       ctime7: 65535
       atime0: 0
@@ -378,22 +378,22 @@ MonoBehaviour:
         outSlope: 0.021929955
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.39062953
+        time: 0.42723873
         value: 0.06950751
         inSlope: 0.4223734
         outSlope: 0.4223734
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.46360302
-        value: 0.12300241
+        time: 0.5002122
+        value: 0.115756035
         inSlope: 0.43499538
         outSlope: 0.43499538
         tangentMode: 0
       - serializedVersion: 2
         time: 0.6319356
         value: 0.27853662
-        inSlope: 1.3366799
-        outSlope: 1.3366799
+        inSlope: 1.4925828
+        outSlope: 1.4925828
         tangentMode: 34
       - serializedVersion: 2
         time: 0.8070371
@@ -429,33 +429,11 @@ MonoBehaviour:
     heightLacunarity: 1.42
     heightRedistribution: 1.2
     falloffSeed: 4
-    falloffScale: 500
+    falloffScale: 800
     falloffOctaves: 12
     falloffPersistance: 0.7
     falloffLacunarity: 1.42
     falloffRedistribution: 0.2
-    heightBaseFloorOffset: 0
-    heightFalloffDistanceMultiplier: 50
-    heightFallOffEdgeSlope: 1
-    heightFalloffDropOffSpeed: 0.4
-    heightFalloffMultiplierCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 2
-        time: 0.65
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-      - serializedVersion: 2
-        time: 1
-        value: 1
-        inSlope: 2
-        outSlope: 2
-        tangentMode: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 0
 --- !u!4 &1482609950
 Transform:
   m_ObjectHideFlags: 0
