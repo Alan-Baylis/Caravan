@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Chunk
 {
-    // Member variables
+    // Member variabless
     private GameObject _gameObject;
     public GameObject gameObject
     {
