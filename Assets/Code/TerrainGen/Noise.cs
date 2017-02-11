@@ -41,15 +41,6 @@ public class Noise
     /// <summary>
     /// Returns a Noise.Data containing a noise map generated from the parameter values, and the paremeters used to generate the data
     /// </summary>
-    /// <param name="inSeed"></param>
-    /// <param name="inSize"></param>
-    /// <param name="inOffset"></param>
-    /// <param name="inOctaves"></param>
-    /// <param name="inScale"></param>
-    /// <param name="inPersistance"></param>
-    /// <param name="inLacunarity"></param>
-    /// <param name="inRedistribution"></param>
-    /// <returns></returns>
     static public Data GenerateNoiseData(int inSeed, int inSize, Vector2 inOffset, int inOctaves, float inScale, float inPersistance, float inLacunarity, float inRedistribution)
     {
         inSize += 1;
@@ -118,8 +109,6 @@ public class Noise
     /// <summary>
     /// Generates a falloff map by linerarily decreasing the values of the noise map passed through the parameter depending on distance from center
     /// </summary>
-    /// <param name="inFalloffNoiseData"></param>
-    /// <returns></returns>
     static public Data GenerateFalloffMap(Data inFalloffNoiseData)
     {
         for (int y = 0; y < inFalloffNoiseData.parameters.size; y++)
@@ -138,9 +127,6 @@ public class Noise
     /// <summary>
     /// Applies falloff map to the noise map passed through the parameter using the falloff map passed through the parameter
     /// </summary>
-    /// <param name="noiseData"></param>
-    /// <param name="falloffData"></param>
-    /// <returns></returns>
     static public Data ApplyFalloffMap(Data noiseData, Data falloffData)
     {
         for (int y = 0; y < noiseData.parameters.size; y++)
