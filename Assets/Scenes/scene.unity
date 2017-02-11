@@ -296,6 +296,7 @@ GameObject:
   - component: {fileID: 1482609950}
   - component: {fileID: 1482609949}
   - component: {fileID: 1482609951}
+  - component: {fileID: 1482609952}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -458,6 +459,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dc8a25e8c2289e479089d66f5bc5437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1482609952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1482609948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c83b05bb81ceb046bfe5c17b5ddbd76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _town: {fileID: 1570607044597906, guid: 8a785b003a4188f44b27148298a817e0, type: 2}
+  _towns: []
+  _numTowns: 80
+  _minimumPosition: {x: -600, y: -600}
+  _maximumPosition: {x: 600, y: 600}
 --- !u!1 &1501864685
 GameObject:
   m_ObjectHideFlags: 0
