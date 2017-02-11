@@ -87,7 +87,7 @@ public class Noise
                 noiseMap[x, y] = noiseHeight;
             }
 
-        // Normalize noise map (-1 to 1) -> (0 to 1)
+        // Normalize noise map to a positive spectrum
         for (int y = 0; y < inSize; y++)
             for (int x = 0; x < inSize; x++)
             {
