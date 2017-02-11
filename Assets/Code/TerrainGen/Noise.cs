@@ -43,7 +43,6 @@ public class Noise
     /// </summary>
     static public Data GenerateNoiseData(int inSeed, int inSize, Vector2 inOffset, int inOctaves, float inScale, float inPersistance, float inLacunarity, float inRedistribution)
     {
-        inSize += 1;
 
         float maxPossibleHeight = 0;
         float amplitude = 1;
@@ -60,6 +59,7 @@ public class Noise
             amplitude *= inPersistance;
         }
 
+        inSize += 1;
 
         float[,] noiseMap = new float[inSize, inSize];
 
