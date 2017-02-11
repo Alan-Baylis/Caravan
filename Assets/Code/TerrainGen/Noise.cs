@@ -97,8 +97,6 @@ public class Noise
                 noiseMap[x, y] = Mathf.Clamp(normalizedHeight, 0, int.MaxValue);
             }
 
-        
-
         Data.Parameters usedParameters = new Data.Parameters(inSeed, inSize, inOctaves, inScale, inPersistance, inLacunarity, inRedistribution, inOffset);
         Data newData = new Data(usedParameters, noiseMap);
 

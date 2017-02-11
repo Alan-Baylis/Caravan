@@ -29,4 +29,10 @@ public class Chunk
         _gameObject = inGameObject;
         _coords = inChunkCoords;
     }
+
+    // External
+    public float GetTileHeight(int xCoord, int yCoord)
+    {
+        return _noiseData.heightMap.noise[xCoord, yCoord]; // WARNING: Do mind this is temporary since biomes will be implemented
+    }
 }
