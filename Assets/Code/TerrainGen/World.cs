@@ -108,6 +108,9 @@ public class World : MonoBehaviour
     private bool _isGeneratingChunks = false;
 
 
+    [SerializeField] private GameObject _townPrefab;
+
+
     /* Start, Update */
     void Start()
     {
@@ -127,6 +130,7 @@ public class World : MonoBehaviour
     private IEnumerator GenerateChunks()
     {
         _isGeneratingChunks = true;
+
 
         while(_chunksToGenerateCoordsQueue.Count > 0)
         {
@@ -200,11 +204,19 @@ public class World : MonoBehaviour
         }
     }
 
+
     /* External methods */
     public void UpdateChunks()
     {
         foreach (Vector2 chunkCoord in _worldChunks.Keys)
             _chunkGenerator.RegenerateChunk(_worldChunks[chunkCoord]);
+    }
+
+    public void GenerateTown(Vector3 inWorldPosition)
+    {
+        GameObject newTown = Instantiate(_townPrefab);
+
+        newTown.transform.position = inWorldPosition;
     }
 }
 

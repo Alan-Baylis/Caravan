@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using UnityEngine;
+using System;
 using System.Threading;
-using UnityEngine;
+using System.Collections.Generic;
 
 
 public class ChunkGenerator : MonoBehaviour 
@@ -153,7 +153,7 @@ public class ChunkGenerator : MonoBehaviour
     /* External Methods */
     public Chunk GenerateChunk(Vector2 inChunkCoords)
     {
-        Chunk newChunk = new Chunk(inChunkCoords, GenerateGO(inChunkCoords));
+        Chunk newChunk = new Chunk(inChunkCoords, GenerateGO(inChunkCoords), _world);
 
         RequestNoiseData(inChunkCoords, _world.worldGenData, newChunk);
 
