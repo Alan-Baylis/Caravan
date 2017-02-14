@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 
 public class Chunk
 {
+    // Member variabless
     private World _world;
 
-    // Member variabless
     private GameObject _gameObject;
     public GameObject gameObject
     {
@@ -18,7 +19,6 @@ public class Chunk
         get { return _coords; }
     }
 
-
     private NoiseData _noiseData;
     public NoiseData noiseData
     {
@@ -29,6 +29,7 @@ public class Chunk
         }
     }
 
+
     // Constructor
     public Chunk(Vector2 inChunkCoords, GameObject inGameObject, World inWorld)
     {
@@ -37,6 +38,7 @@ public class Chunk
         _world = inWorld;
 
     }
+
 
     // External
     public float GetTileHeight(int xCoord, int yCoord)
@@ -55,7 +57,7 @@ public class Chunk
             Vector2 newTownPosition = new Vector2(Random.Range(0, chunkSize), Random.Range(0, chunkSize));
             float targetTileHeight = GetTileHeight((int)newTownPosition.x, (int)newTownPosition.y);
 
-            Vector3 newTownWorldSpacePosition = new Vector3(newTownPosition.x + (chunkSize * coords.x), targetTileHeight + 5, newTownPosition.y - (chunkSize * coords.y));
+            Vector3 newTownWorldSpacePosition = new Vector3(newTownPosition.x + (chunkSize * coords.x), (targetTileHeight * _world.worldGenData.heightMultiplierCurve.Evaluate(targetTileHeight) * _world.worldGenData.meshHeightMultiplier) + 4, newTownPosition.y - (chunkSize * coords.y));
 
             if (targetTileHeight > 0.2f && targetTileHeight < 0.4f)
                 _world.GenerateTown(newTownWorldSpacePosition);
