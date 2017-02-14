@@ -28,6 +28,7 @@ public class WorldEditor : Editor
 public class World : MonoBehaviour
 {
     /* Member variables */
+    
     [SerializeField]
     private WorldGenData _worldGenData;
     public WorldGenData worldGenData
@@ -212,11 +213,13 @@ public class World : MonoBehaviour
             _chunkGenerator.RegenerateChunk(_worldChunks[chunkCoord]);
     }
 
-    public void GenerateTown(Vector3 inWorldPosition)
+    public GameObject GenerateTown(Vector3 inWorldPosition)
     {
         GameObject newTown = Instantiate(_townPrefab);
 
         newTown.transform.position = inWorldPosition;
+
+        return newTown;
     }
 }
 
