@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public class Chunk
 {
     // Member variabless
     private World _world;
+    public World world
+    {
+        get { return _world; }
+    }
 
     private GameObject _gameObject;
     public GameObject gameObject
@@ -19,13 +24,30 @@ public class Chunk
         get { return _coords; }
     }
 
-    private NoiseData _noiseData;
-    public NoiseData noiseData
+    [System.Serializable]
+    public struct ChunkData
     {
+        public NoiseData noiseData;
+        public MeshData meshData;
+        public TextureData textureData;
+
+        public bool IsComplete()
+        {
+            if (noiseData != null && meshData != null && textureData != null)
+                return true;
+
+            return false;
+        }
+    }
+    private ChunkData _chunkData;
+    public ChunkData chunkData
+    {
+        get { return _chunkData; }
         set
         {
-            _noiseData = value;
-            GenerateTowns();
+            _chunkData = value;
+            //if (_chunkData.IsComplete())
+            //    SaveToDisk();
         }
     }
 
@@ -36,17 +58,38 @@ public class Chunk
         _gameObject = inGameObject;
         _coords = inChunkCoords;
         _world = inWorld;
-
     }
 
+    public Chunk(Vector2 inChunkCoords, GameObject inGameObject, World inWorld, ChunkData inChunkData)
+    {
+        _gameObject = inGameObject;
+        _coords = inChunkCoords;
+        _world = inWorld;
+        _chunkData = inChunkData;
+    }
 
     // External
     public float GetTileHeight(int xCoord, int yCoord)
     {
-        return _noiseData.heightMap.noise[xCoord, yCoord]; // WARNING: Do mind this is temporary since biomes will be implemented
+        return _chunkData.noiseData.heightMap.noise[xCoord, yCoord]; // WARNING: Do mind this is temporary since biomes will be implemented
     }
 
     // Internal
+    public void SaveToDisk()
+    {
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        MemoryStream memoryStream = new MemoryStream();
+
+        binaryFormatter.Serialize(memoryStream, chunkData);
+
+        byte[] _noiseDataBytes = memoryStream.ToArray();
+
+        File.WriteAllBytes(Application.dataPath + @"\..\Chunks\" + coords.x.ToString() + "." + coords.y.ToString() + ".dat", _noiseDataBytes);
+
+
+  
+    }
+
     private void GenerateTowns()
     {
         int townGenerationTries = Random.Range(0, 5);  // TODO - In order to make worlds generate identically every time, a global seed value is probably needed. So yeah, implement global seed value

@@ -2,6 +2,8 @@
 using System;
 using System.Threading;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 
 public class ChunkGenerator : MonoBehaviour 
@@ -75,32 +77,32 @@ public class ChunkGenerator : MonoBehaviour
 
 
     // Request methods
-    private void RequestNoiseData(Vector2 inChunkCoords, World.WorldGenData inWorldGenData, Chunk inChunk)
+    private void RequestNoiseData(Vector2 inChunkCoords, Chunk inChunk)
     {
-        NoiseData noiseData = new NoiseData(inChunkCoords, inWorldGenData, this);
+        NoiseData noiseData = new NoiseData();
         Action callbackMethod = new Action(() => OnNoiseDataReceived(noiseData, inChunk));
 
-        ThreadStart threadStart = delegate { noiseData.Generate(callbackMethod); };
+        ThreadStart threadStart = delegate { noiseData.Generate(callbackMethod, inChunkCoords, _world.worldGenData, this); };
 
         new Thread(threadStart).Start();
     }
 
     private void RequestMeshData(NoiseData inNoiseData, Chunk inChunk)
     {
-        MeshData meshData = new MeshData(inNoiseData);
+        MeshData meshData = new MeshData(inChunk.world.worldGenData.chunkSize);
         Action callbackMethod = new Action(() => OnMeshDataReceived(meshData, inChunk));
 
-        ThreadStart threadStart = delegate { meshData.Generate(callbackMethod); };
+        ThreadStart threadStart = delegate { meshData.Generate(callbackMethod, inNoiseData, _world.worldGenData, this); };
 
         new Thread(threadStart).Start();
     }
 
     private void RequestTexture(NoiseData inNoiseData, Chunk inChunk)
     {
-        TextureData textureData = new TextureData(inNoiseData);
+        TextureData textureData = new TextureData();
         Action callbackMethod = new Action(() => OnTextureReceived(textureData, inChunk));
 
-        ThreadStart threadStart = delegate { textureData.Generate(callbackMethod); };
+        ThreadStart threadStart = delegate { textureData.Generate(callbackMethod, inNoiseData, _world.worldGenData, this); };
 
         new Thread(threadStart).Start();
     }
@@ -109,11 +111,13 @@ public class ChunkGenerator : MonoBehaviour
     // Callback methods
     private void OnNoiseDataReceived(NoiseData inNoiseData, Chunk inChunk)
     {
+        Chunk.ChunkData newChunkData = inChunk.chunkData;
+        newChunkData.noiseData = inNoiseData;
+        inChunk.chunkData = newChunkData;
+
         RequestMeshData(inNoiseData, inChunk);
 
         RequestTexture(inNoiseData, inChunk);
-
-        inChunk.noiseData = inNoiseData;
     }
 
     private void OnMeshDataReceived(MeshData inMeshData, Chunk inChunk)
@@ -123,14 +127,28 @@ public class ChunkGenerator : MonoBehaviour
 
         Mesh newMesh = new Mesh();
         newMesh.name = "Terrain Mesh";
-        newMesh.vertices = inMeshData.vertexCoords;
-        newMesh.normals = inMeshData.normals;
-        newMesh.uv = inMeshData.UVCoords;
+
+        List<Vector3> newVertices = new List<Vector3>();
+        List<Vector3> newNormals = new List<Vector3>();
+        List<Vector2> newUVs = new List<Vector2>();
+
+        for (int i = 0; i < inMeshData.vertexCoords.Length; i++) newVertices.Add(inMeshData.vertexCoords[i]);
+        for (int i = 0; i < inMeshData.normals.Length; i++) newNormals.Add(inMeshData.normals[i]);
+        for (int i = 0; i < inMeshData.UVCoords.Length; i++) newUVs.Add(inMeshData.UVCoords[i]);
+
+        newMesh.SetVertices(newVertices);
+        newMesh.SetNormals(newNormals);
+        newMesh.uv = newUVs.ToArray();
+
         newMesh.triangles = inMeshData.triVertIDs;
 
         newMesh.RecalculateNormals();
 
         inChunk.gameObject.GetComponent<MeshFilter>().mesh = newMesh;
+
+        Chunk.ChunkData newChunkData = inChunk.chunkData;
+        newChunkData.meshData = inMeshData;
+        inChunk.chunkData = newChunkData;
     }
 
     private void OnTextureReceived(TextureData inTextureData, Chunk inChunk)
@@ -138,39 +156,70 @@ public class ChunkGenerator : MonoBehaviour
         if (inChunk.gameObject == null)
             return;
 
-        int chunkSize = inTextureData.noiseData.worldGenData.chunkSize;
+        int chunkSize = inChunk.world.worldGenData.chunkSize;
 
         Texture2D texture = new Texture2D(chunkSize, chunkSize);
         texture.filterMode = FilterMode.Trilinear;
         texture.wrapMode = TextureWrapMode.Clamp;
-        texture.SetPixels(inTextureData.colorMap);
+
+        Color[] colorMap = new Color[inTextureData.colorMap.Length];
+        for (int i = 0; i < inTextureData.colorMap.Length; i++) colorMap[i] = inTextureData.colorMap[i];
+        texture.SetPixels(colorMap);
         texture.Apply();
 
         inChunk.gameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
+
+        Chunk.ChunkData newChunkData = inChunk.chunkData;
+        newChunkData.textureData = inTextureData;
+        inChunk.chunkData = newChunkData;
     }
     
 
     /* External Methods */
     public Chunk GenerateChunk(Vector2 inChunkCoords)
     {
-        Chunk newChunk = new Chunk(inChunkCoords, GenerateGO(inChunkCoords), _world);
+        Chunk newChunk;
+        if (File.Exists(Application.dataPath + @"\..\Chunks\" + inChunkCoords.x.ToString() + "." + inChunkCoords.y.ToString() + ".dat"))
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
 
-        RequestNoiseData(inChunkCoords, _world.worldGenData, newChunk);
+            byte[] chunkBytesReadFromDisk = File.ReadAllBytes(Application.dataPath + @"\..\Chunks\" + inChunkCoords.x.ToString() + "." + inChunkCoords.y.ToString() + ".dat");
+
+            memoryStream.Write(chunkBytesReadFromDisk, 0, chunkBytesReadFromDisk.Length);
+            memoryStream.Position = 0;
+
+            Chunk.ChunkData loadedChunkData = (Chunk.ChunkData)binaryFormatter.Deserialize(memoryStream);
+
+            newChunk = new Chunk(inChunkCoords, GenerateGO(inChunkCoords), _world, loadedChunkData);
+
+            OnNoiseDataReceived(loadedChunkData.noiseData, newChunk);
+            OnMeshDataReceived(loadedChunkData.meshData, newChunk);
+            OnTextureReceived(loadedChunkData.textureData, newChunk);
+        }
+
+        else
+        {
+            newChunk = new Chunk(inChunkCoords, GenerateGO(inChunkCoords), _world);
+
+            RequestNoiseData(inChunkCoords, newChunk);
+        }
 
         return newChunk;
     }
 
     public void RegenerateChunk(Chunk inChunkToRegenerate)
     {
-        RequestNoiseData(inChunkToRegenerate.coords, _world.worldGenData, inChunkToRegenerate);
+        RequestNoiseData(inChunkToRegenerate.coords, inChunkToRegenerate);
     }
 }
 
+[Serializable]
 public class NoiseData
 {
-    public readonly Vector2 chunkCoords;
-    public readonly World.WorldGenData worldGenData;
-    public readonly ChunkGenerator chunkGenerator;
+    //public readonly SAbleVector2 chunkCoords;                            
+    //public readonly World.WorldGenData worldGenData;
+    //public readonly ChunkGenerator chunkGenerator;
 
     private Noise.Data _tempMap;
     public  Noise.Data tempMap
@@ -197,97 +246,92 @@ public class NoiseData
     }
 
     // Constructor
-    public NoiseData(Vector2 inChunkCoords, World.WorldGenData inWorldGenData, ChunkGenerator inChunkGenerator)
-    {
-        chunkCoords = inChunkCoords;
-        worldGenData = inWorldGenData;
-        chunkGenerator = inChunkGenerator;
-    }
+    public NoiseData(){}
        
     // External methods
-    public void Generate(Action callback)
+    public void Generate(Action callback, Vector2 inChunkCoords, World.WorldGenData inWorldGenData, ChunkGenerator inChunkGenerator)
     {
         _tempMap = Noise.GenerateNoiseData
         (
-            worldGenData.tempSeed,
-            worldGenData.chunkSize,
-            chunkCoords,
-            worldGenData.tempOctaves,
-            worldGenData.tempScale,
-            worldGenData.tempPersistance,
-            worldGenData.tempLacunarity,
-            worldGenData.tempRedistribution
+            inWorldGenData.tempSeed,
+            inWorldGenData.chunkSize,
+            inChunkCoords,
+            inWorldGenData.tempOctaves,
+            inWorldGenData.tempScale,
+            inWorldGenData.tempPersistance,
+            inWorldGenData.tempLacunarity,
+            inWorldGenData.tempRedistribution
         );
 
         _humidMap = Noise.GenerateNoiseData
         (
-            worldGenData.humidSeed,
-            worldGenData.chunkSize,
-            chunkCoords,
-            worldGenData.humidOctaves,
-            worldGenData.humidScale,
-            worldGenData.humidPersistance,
-            worldGenData.humidLacunarity,
-            worldGenData.humidRedistribution
+            inWorldGenData.humidSeed,
+            inWorldGenData.chunkSize,
+            inChunkCoords,
+            inWorldGenData.humidOctaves,
+            inWorldGenData.humidScale,
+            inWorldGenData.humidPersistance,
+            inWorldGenData.humidLacunarity,
+            inWorldGenData.humidRedistribution
         );
 
         _heightMap = Noise.GenerateNoiseData
         (
-            worldGenData.heightSeed,
-            worldGenData.chunkSize,
-            chunkCoords,
-            worldGenData.heightOctaves,
-            worldGenData.heightScale,
-            worldGenData.heightPersistance,
-            worldGenData.heightLacunarity,
-            worldGenData.heightRedistribution
+            inWorldGenData.heightSeed,
+            inWorldGenData.chunkSize,
+            inChunkCoords,
+            inWorldGenData.heightOctaves,
+            inWorldGenData.heightScale,
+            inWorldGenData.heightPersistance,
+            inWorldGenData.heightLacunarity,
+            inWorldGenData.heightRedistribution
         );
 
         _falloffMap = Noise.GenerateNoiseData
         (
-            worldGenData.falloffSeed,
-            worldGenData.chunkSize,
-            chunkCoords,
-            worldGenData.falloffOctaves,
-            worldGenData.falloffScale,
-            worldGenData.falloffPersistance,
-            worldGenData.falloffLacunarity,
-            worldGenData.falloffRedistribution
+            inWorldGenData.falloffSeed,
+            inWorldGenData.chunkSize,
+            inChunkCoords,
+            inWorldGenData.falloffOctaves,
+            inWorldGenData.falloffScale,
+            inWorldGenData.falloffPersistance,
+            inWorldGenData.falloffLacunarity,
+            inWorldGenData.falloffRedistribution
         );
 
         _falloffMap = Noise.GenerateFalloffMap(_falloffMap);
 
         _heightMap = Noise.ApplyFalloffMap(_heightMap, _falloffMap);
 
-        lock (chunkGenerator.noiseDataThreadInfoQueue)
-            chunkGenerator.noiseDataThreadInfoQueue.Enqueue(callback);
+        lock (inChunkGenerator.noiseDataThreadInfoQueue)
+            inChunkGenerator.noiseDataThreadInfoQueue.Enqueue(callback);
     }
 }
 
+[Serializable]
 public class MeshData
 {
     // Member variables
-    public readonly NoiseData noiseData;
     public readonly int meshSize;
     public readonly int tileCount;
     public readonly int triangleCount;
     public readonly int vertexSize;
     public readonly int vertexCount;
 
-    private Vector3[] _vertexCoords;
-    public Vector3[] vertexCoords
+    private SAbleVector3[] _vertexCoords;
+    public SAbleVector3[] vertexCoords
     {
         get { return _vertexCoords; }
     }
 
-    private Vector3[] _normals;
-    public Vector3[] normals
+    private SAbleVector3[] _normals;
+    public SAbleVector3[] normals
     {
         get { return _normals; }
     }
 
-    private Vector2[] _UVCoords;
-    public Vector2[] UVCoords
+    private SAbleVector2[] _UVCoords;
+    public SAbleVector2[] UVCoords
     {
         get { return _UVCoords; }
     }
@@ -299,11 +343,9 @@ public class MeshData
     }
 
     // Constructor
-    public MeshData(NoiseData inNoiseData)
+    public MeshData(int inMeshSize)
     {
-        noiseData = inNoiseData;
-
-        meshSize = inNoiseData.worldGenData.chunkSize;
+        meshSize = inMeshSize;
 
         tileCount = meshSize * meshSize;
         triangleCount = tileCount * 2;
@@ -311,19 +353,19 @@ public class MeshData
         vertexSize = meshSize + 1;
         vertexCount = vertexSize * vertexSize;
 
-        _vertexCoords = new Vector3[vertexCount];
-        _normals = new Vector3[vertexCount];
-        _UVCoords = new Vector2[vertexCount];
+        _vertexCoords = new SAbleVector3[vertexCount];
+        _normals = new SAbleVector3[vertexCount];
+        _UVCoords = new SAbleVector2[vertexCount];
 
         _triVertIDs = new int[triangleCount * 3];
     }
 
     // External methods
-    public void Generate(Action callback)
+    public void Generate(Action callback, NoiseData inNoiseData, World.WorldGenData inWorldGenData, ChunkGenerator inChunkGenerator)
     {
-        AnimationCurve heightMultiplierCurve = new AnimationCurve(noiseData.worldGenData.heightMultiplierCurve.keys);
-        float meshHeightMultiplier = noiseData.worldGenData.meshHeightMultiplier;
-        float[,] heightMap = noiseData.heightMap.noise;
+        AnimationCurve heightMultiplierCurve = new AnimationCurve(inWorldGenData.heightMultiplierCurve.keys);
+        float meshHeightMultiplier = inWorldGenData.meshHeightMultiplier;
+        float[,] heightMap = inNoiseData.heightMap.noise;
         Vector3 upVector = Vector3.up;
 
         for (int y = 0; y < vertexSize; y++)
@@ -374,42 +416,45 @@ public class MeshData
             diagonal = !diagonal;
         }
 
-        lock (noiseData.chunkGenerator.meshDataThreadInfoQueue)
-            noiseData.chunkGenerator.meshDataThreadInfoQueue.Enqueue(callback);
+        lock (inChunkGenerator.meshDataThreadInfoQueue)
+            inChunkGenerator.meshDataThreadInfoQueue.Enqueue(callback);
     }
 }
 
+[Serializable]
 public class TextureData
 {
     // Member variables
-    public readonly NoiseData noiseData;
-
-    private Color[] _colorMap;
-    public Color[] colorMap
+    private SAbleColor[] _colorMap;
+    public SAbleColor[] colorMap
     {
         get { return _colorMap; }
     }
 
     // Constructor
-    public TextureData(NoiseData inNoiseData)
-    {
-        noiseData = inNoiseData;
-    }
+    public TextureData(){}
 
     // External methods
-    public void Generate(Action callback)
+    public void Generate(Action callback, NoiseData inNoiseData, World.WorldGenData inWorldGenData, ChunkGenerator inChunkGenerator)
     {
-        int textureSize = noiseData.worldGenData.chunkSize;
-        Gradient tempTerrainGradient = noiseData.worldGenData.tempTerrainGradient;
-        float[,] heightMap = noiseData.heightMap.noise;
+        int textureSize = inWorldGenData.chunkSize;
+        Gradient tempTerrainGradient = inWorldGenData.tempTerrainGradient;
+        float[,] heightMap = inNoiseData.heightMap.noise;
 
         // Calculate colormap
-        _colorMap = new Color[textureSize * textureSize];
+        _colorMap = new SAbleColor[textureSize * textureSize];
         for (int y = 0; y < textureSize; y++)
             for (int x = 0; x < textureSize; x++)
                 _colorMap[y * textureSize + x] = tempTerrainGradient.Evaluate(heightMap[x, y]);
 
-        lock (noiseData.chunkGenerator.textureDataThreadInfoQueue)
-            noiseData.chunkGenerator.textureDataThreadInfoQueue.Enqueue(callback);
+        lock (inChunkGenerator.textureDataThreadInfoQueue)
+            inChunkGenerator.textureDataThreadInfoQueue.Enqueue(callback);
     }
 }
+
+
+
+// TODO: Make NoiseData.chunkCoords serializable
+// TODO: Make World.WorldGenData serializable
+// TODO: Remove NoiseData.chunkGenerator and pass it through the generate method instead
+// TODO: Remove NoiseData member variable from MeshData and TextureData since it can be passed through the generate method

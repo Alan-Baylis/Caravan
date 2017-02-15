@@ -2,11 +2,12 @@
 
 public class Noise
 {
+    [System.Serializable]
     public struct Data
     {
         public float[,] noise;
 
-        public Parameters parameters;
+        [System.Serializable]
         public struct Parameters
         {
             public int seed;
@@ -16,7 +17,7 @@ public class Noise
             public float persistance;
             public float lacunarity;
             public float redistribution;
-            public Vector2 offset;
+            public float offsetX, offsetY;
 
             public Parameters(int inSeed, int inSize, int inOctaves, float inScale, float inPersistance, float inLacunarity, float inRedistribution, Vector2 inOffset)
             {
@@ -27,9 +28,11 @@ public class Noise
                 persistance = inPersistance;
                 lacunarity = inLacunarity;
                 redistribution = inRedistribution;
-                offset = inOffset;
+                offsetX = inOffset.x;
+                offsetY = inOffset.y;
             }
         }
+        public Parameters parameters;
 
         public Data(Parameters inParameters, float[,] inNoise)
         {
@@ -112,7 +115,7 @@ public class Noise
         for (int y = 0; y < inFalloffNoiseData.parameters.size; y++)
             for (int x = 0; x < inFalloffNoiseData.parameters.size; x++)
             {
-                float vertexDistanceFromCenter = Mathf.Pow(inFalloffNoiseData.parameters.offset.x * inFalloffNoiseData.parameters.size + x, 2) + Mathf.Pow(inFalloffNoiseData.parameters.offset.y * inFalloffNoiseData.parameters.size - y, 2);
+                float vertexDistanceFromCenter = Mathf.Pow(inFalloffNoiseData.parameters.offsetX * inFalloffNoiseData.parameters.size + x, 2) + Mathf.Pow(inFalloffNoiseData.parameters.offsetY * inFalloffNoiseData.parameters.size - y, 2);
                 float normalizedDistance = Mathf.InverseLerp(0, 10000 * 100, vertexDistanceFromCenter);
 
                 inFalloffNoiseData.noise[x,y] += normalizedDistance;
