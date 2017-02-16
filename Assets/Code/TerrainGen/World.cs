@@ -159,9 +159,10 @@ public class World : MonoBehaviour
     {
         while (_chunksToRemoveCoordsQueue.Count > 0)
         {
+            _worldChunks[_chunksToRemoveCoordsQueue[0]].chunkData.SaveToDisk(Application.dataPath + @"\..\Chunks\" + _chunksToRemoveCoordsQueue[0].x.ToString() + "." + _chunksToRemoveCoordsQueue[0].y.ToString() + ".dat");
+
             Destroy(_worldChunks[_chunksToRemoveCoordsQueue[0]].gameObject);
             _worldChunks.Remove(_chunksToRemoveCoordsQueue[0]);
-
             _chunksToRemoveCoordsQueue.RemoveAt(0);
         }
     }

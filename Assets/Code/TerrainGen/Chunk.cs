@@ -56,12 +56,7 @@ public class Chunk
     public ChunkData chunkData
     {
         get { return _chunkData; }
-        set
-        {
-            _chunkData = value;
-            if (_chunkData.IsComplete())
-                _chunkData.SaveToDisk(Application.dataPath + @"\..\Chunks\" + coords.x.ToString() + "." + coords.y.ToString() + ".dat");   
-        }
+        set { _chunkData = value; }
     }
 
 
