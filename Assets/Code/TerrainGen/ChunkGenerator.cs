@@ -214,13 +214,8 @@ public class ChunkGenerator : MonoBehaviour
     }
 }
 
-[Serializable]
 public class NoiseData
 {
-    //public readonly SAbleVector2 chunkCoords;                            
-    //public readonly World.WorldGenData worldGenData;
-    //public readonly ChunkGenerator chunkGenerator;
-
     private Noise.Data _tempMap;
     public  Noise.Data tempMap
     {
@@ -306,9 +301,74 @@ public class NoiseData
         lock (inChunkGenerator.noiseDataThreadInfoQueue)
             inChunkGenerator.noiseDataThreadInfoQueue.Enqueue(callback);
     }
+
+    public void WriteToStream(MemoryStream stream)
+    {
+        BinaryWriter writer = new BinaryWriter(stream);
+
+        int tempMapSize = _tempMap.parameters.size;
+        for (int y = 0; y < tempMapSize; y++)
+            for (int x = 0; x < tempMapSize; x++)
+                writer.Write(_tempMap.noise[x, y]);
+
+        int humidMapSize = _humidMap.parameters.size;
+        for (int y = 0; y < humidMapSize; y++)
+            for (int x = 0; x < humidMapSize; x++)
+                writer.Write(_humidMap.noise[x, y]);            
+
+        int heightMapSize = _heightMap.parameters.size;
+        for (int y = 0; y < heightMapSize; y++)
+            for (int x = 0; x < heightMapSize; x++)
+                writer.Write(_heightMap.noise[x, y]);
+
+        int falloffMapSize = _falloffMap.parameters.size;
+        for (int y = 0; y < falloffMapSize; y++)
+            for (int x = 0; x < falloffMapSize; x++)
+                writer.Write(_falloffMap.noise[x, y]);
+
+
+        writer.Write(_tempMap.parameters.seed);
+        writer.Write(_tempMap.parameters.size);
+        writer.Write(_tempMap.parameters.octaves);
+        writer.Write(_tempMap.parameters.scale);
+        writer.Write(_tempMap.parameters.persistance);
+        writer.Write(_tempMap.parameters.lacunarity);
+        writer.Write(_tempMap.parameters.redistribution);
+        writer.Write(_tempMap.parameters.offsetX);
+        writer.Write(_tempMap.parameters.offsetY);
+
+        writer.Write(_humidMap.parameters.seed);
+        writer.Write(_humidMap.parameters.size);
+        writer.Write(_humidMap.parameters.octaves);
+        writer.Write(_humidMap.parameters.scale);
+        writer.Write(_humidMap.parameters.persistance);
+        writer.Write(_humidMap.parameters.lacunarity);
+        writer.Write(_humidMap.parameters.redistribution);
+        writer.Write(_humidMap.parameters.offsetX);
+        writer.Write(_humidMap.parameters.offsetY);
+
+        writer.Write(_heightMap.parameters.seed);
+        writer.Write(_heightMap.parameters.size);
+        writer.Write(_heightMap.parameters.octaves);
+        writer.Write(_heightMap.parameters.scale);
+        writer.Write(_heightMap.parameters.persistance);
+        writer.Write(_heightMap.parameters.lacunarity);
+        writer.Write(_heightMap.parameters.redistribution);
+        writer.Write(_heightMap.parameters.offsetX);
+        writer.Write(_heightMap.parameters.offsetY);
+
+        writer.Write(_falloffMap.parameters.seed);
+        writer.Write(_falloffMap.parameters.size);
+        writer.Write(_falloffMap.parameters.octaves);
+        writer.Write(_falloffMap.parameters.scale);
+        writer.Write(_falloffMap.parameters.persistance);
+        writer.Write(_falloffMap.parameters.lacunarity);
+        writer.Write(_falloffMap.parameters.redistribution);
+        writer.Write(_falloffMap.parameters.offsetX);
+        writer.Write(_falloffMap.parameters.offsetY);
+    }
 }
 
-[Serializable]
 public class MeshData
 {
     // Member variables
@@ -419,9 +479,38 @@ public class MeshData
         lock (inChunkGenerator.meshDataThreadInfoQueue)
             inChunkGenerator.meshDataThreadInfoQueue.Enqueue(callback);
     }
+
+    public void WriteToStream(Stream stream)
+    {
+        BinaryWriter writer = new BinaryWriter(stream);
+
+
+        writer.Write(meshSize);
+        writer.Write(tileCount);
+        writer.Write(triangleCount);
+        writer.Write(vertexSize);
+        writer.Write(vertexCount);
+
+
+        int vertexCoordsLength = _vertexCoords.Length;
+        for (int i = 0; i < vertexCoordsLength; i++) writer.Write(_vertexCoords[i].x);
+        for (int i = 0; i < vertexCoordsLength; i++) writer.Write(_vertexCoords[i].y);
+        for (int i = 0; i < vertexCoordsLength; i++) writer.Write(_vertexCoords[i].z);
+
+        int normalsLength = _normals.Length;
+        for (int i = 0; i < normalsLength; i++) writer.Write(_normals[i].x);
+        for (int i = 0; i < normalsLength; i++) writer.Write(_normals[i].y);
+        for (int i = 0; i < normalsLength; i++) writer.Write(_normals[i].z);
+
+        int UVCoordsLength = _UVCoords.Length;
+        for (int i = 0; i < UVCoordsLength; i++) writer.Write(_UVCoords[i].x);
+        for (int i = 0; i < UVCoordsLength; i++) writer.Write(_UVCoords[i].y);
+
+        int triVertIDsLength = _triVertIDs.Length;
+        for (int i = 0; i < triVertIDsLength; i++) writer.Write(_triVertIDs[i]);
+    }
 }
 
-[Serializable]
 public class TextureData
 {
     // Member variables
@@ -449,6 +538,18 @@ public class TextureData
 
         lock (inChunkGenerator.textureDataThreadInfoQueue)
             inChunkGenerator.textureDataThreadInfoQueue.Enqueue(callback);
+    }
+
+    public void WriteToStream(MemoryStream stream)
+    {
+        BinaryWriter writer = new BinaryWriter(stream);
+
+        int colorMapLength = _colorMap.Length;
+
+        for (int i = 0; i < colorMapLength; i++) writer.Write(_colorMap[i].r);
+        for (int i = 0; i < colorMapLength; i++) writer.Write(_colorMap[i].g);
+        for (int i = 0; i < colorMapLength; i++) writer.Write(_colorMap[i].b);
+        for (int i = 0; i < colorMapLength; i++) writer.Write(_colorMap[i].a);
     }
 }
 

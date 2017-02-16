@@ -38,6 +38,19 @@ public class Chunk
 
             return false;
         }
+
+        public void SaveToDisk(string filePath)
+        {
+            MemoryStream memStream = new MemoryStream();
+
+            noiseData.WriteToStream(memStream);
+            meshData.WriteToStream(memStream);
+            textureData.WriteToStream(memStream);
+
+            byte[] _dataToSave = memStream.ToArray();
+
+            File.WriteAllBytes(filePath, _dataToSave);
+        }
     }
     private ChunkData _chunkData;
     public ChunkData chunkData
@@ -46,8 +59,8 @@ public class Chunk
         set
         {
             _chunkData = value;
-            //if (_chunkData.IsComplete())
-            //    SaveToDisk();
+            if (_chunkData.IsComplete())
+                _chunkData.SaveToDisk(Application.dataPath + @"\..\Chunks\" + coords.x.ToString() + "." + coords.y.ToString() + ".dat");   
         }
     }
 
@@ -77,17 +90,14 @@ public class Chunk
     // Internal
     public void SaveToDisk()
     {
-        BinaryFormatter binaryFormatter = new BinaryFormatter();
         MemoryStream memoryStream = new MemoryStream();
 
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
         binaryFormatter.Serialize(memoryStream, chunkData);
 
         byte[] _noiseDataBytes = memoryStream.ToArray();
 
         File.WriteAllBytes(Application.dataPath + @"\..\Chunks\" + coords.x.ToString() + "." + coords.y.ToString() + ".dat", _noiseDataBytes);
-
-
-  
     }
 
     private void GenerateTowns()
