@@ -115,6 +115,9 @@ public class World : MonoBehaviour
     /* Start, Update */
     void Start()
     {
+        // Make sure Chunks folder exist for chunks to be loaded to/from
+        System.IO.Directory.CreateDirectory(Application.dataPath + @"\..\Chunks");
+
         _chunkGenerator = GetComponent<ChunkGenerator>();
         _cameraControllerTransform = Camera.main.transform.parent;
     }
