@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Assets.Code.BehaviourTree
+namespace BehaviourTree
 {
     class StaticReturnNode : BaseNode
     {
-        public NodeState GetValue()
+        override public NodeState Tick()
         {
             return NodeState.SUCCESS;
         }
