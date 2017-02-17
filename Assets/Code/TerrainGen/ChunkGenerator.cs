@@ -128,17 +128,9 @@ public class ChunkGenerator : MonoBehaviour
         Mesh newMesh = new Mesh();
         newMesh.name = "Terrain Mesh";
 
-        List<Vector3> newVertices = new List<Vector3>();
-        List<Vector3> newNormals = new List<Vector3>();
-        List<Vector2> newUVs = new List<Vector2>();
-
-        for (int i = 0; i < inMeshData.vertexCoords.Length; i++) newVertices.Add(inMeshData.vertexCoords[i]);
-        for (int i = 0; i < inMeshData.normals.Length; i++) newNormals.Add(inMeshData.normals[i]);
-        for (int i = 0; i < inMeshData.UVCoords.Length; i++) newUVs.Add(inMeshData.UVCoords[i]);
-
-        newMesh.SetVertices(newVertices);
-        newMesh.SetNormals(newNormals);
-        newMesh.uv = newUVs.ToArray();
+        newMesh.vertices = inMeshData.vertexCoords;
+        newMesh.normals = inMeshData.normals;
+        newMesh.uv = inMeshData.UVCoords;
 
         newMesh.triangles = inMeshData.triVertIDs;
 
@@ -162,9 +154,9 @@ public class ChunkGenerator : MonoBehaviour
         texture.filterMode = FilterMode.Trilinear;
         texture.wrapMode = TextureWrapMode.Clamp;
 
-        Color[] colorMap = new Color[inTextureData.colorMap.Length];
-        for (int i = 0; i < inTextureData.colorMap.Length; i++) colorMap[i] = inTextureData.colorMap[i];
-        texture.SetPixels(colorMap);
+        int colorMapLength = inTextureData.colorMap.Length;
+        
+        texture.SetPixels(inTextureData.colorMap);
         texture.Apply();
 
         inChunk.gameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
@@ -178,31 +170,9 @@ public class ChunkGenerator : MonoBehaviour
     /* External Methods */
     public Chunk GenerateChunk(Vector2 inChunkCoords)
     {
-        Chunk newChunk;
-        if (File.Exists(Application.dataPath + @"\..\Chunks\" + inChunkCoords.x.ToString() + "." + inChunkCoords.y.ToString() + ".dat"))
-        {
-            byte[] loadedBytes = File.ReadAllBytes(Application.dataPath + @"\..\Chunks\" + inChunkCoords.x.ToString() + "." + inChunkCoords.y.ToString() + ".dat");
+        Chunk newChunk = new Chunk(inChunkCoords, GenerateGO(inChunkCoords), _world);
 
-            MemoryStream memoryStream = new MemoryStream(loadedBytes);
-
-            Chunk.ChunkData loadedChunkData = new Chunk.ChunkData();
-            loadedChunkData.noiseData = NoiseData.ReadFromStream(memoryStream);
-            loadedChunkData.meshData = MeshData.ReadFromStream(memoryStream);
-            loadedChunkData.textureData = TextureData.ReadFromStream(memoryStream);
-
-            newChunk = new Chunk(inChunkCoords, GenerateGO(inChunkCoords), _world, loadedChunkData);
-
-            OnNoiseDataReceived(loadedChunkData.noiseData, newChunk);
-            OnMeshDataReceived(loadedChunkData.meshData, newChunk);
-            OnTextureReceived(loadedChunkData.textureData, newChunk);
-        }
-
-        else
-        {
-            newChunk = new Chunk(inChunkCoords, GenerateGO(inChunkCoords), _world);
-
-            RequestNoiseData(inChunkCoords, newChunk);
-        }
+        RequestNoiseData(inChunkCoords, newChunk);
 
         return newChunk;
     }
@@ -300,165 +270,6 @@ public class NoiseData
         lock (inChunkGenerator.noiseDataThreadInfoQueue)
             inChunkGenerator.noiseDataThreadInfoQueue.Enqueue(callback);
     }
-
-    public void WriteToStream(MemoryStream stream)
-    {
-        BinaryWriter writer = new BinaryWriter(stream);
-
-        int tempMapSize = _tempMap.parameters.size;
-        writer.Write(tempMapSize);
-        for (int y = 0; y < tempMapSize; y++)
-            for (int x = 0; x < tempMapSize; x++)
-                writer.Write(_tempMap.noise[x, y]);
-
-        int humidMapSize = _humidMap.parameters.size;
-        writer.Write(humidMapSize);
-        for (int y = 0; y < humidMapSize; y++)
-            for (int x = 0; x < humidMapSize; x++)
-                writer.Write(_humidMap.noise[x, y]);            
-
-        int heightMapSize = _heightMap.parameters.size;
-        writer.Write(heightMapSize);
-        for (int y = 0; y < heightMapSize; y++)
-            for (int x = 0; x < heightMapSize; x++)
-                writer.Write(_heightMap.noise[x, y]);
-
-        int falloffMapSize = _falloffMap.parameters.size;
-        writer.Write(falloffMapSize);
-        for (int y = 0; y < falloffMapSize; y++)
-            for (int x = 0; x < falloffMapSize; x++)
-                writer.Write(_falloffMap.noise[x, y]);
-
-
-        writer.Write(_tempMap.parameters.seed);
-        writer.Write(_tempMap.parameters.size);
-        writer.Write(_tempMap.parameters.octaves);
-        writer.Write(_tempMap.parameters.scale);
-        writer.Write(_tempMap.parameters.persistance);
-        writer.Write(_tempMap.parameters.lacunarity);
-        writer.Write(_tempMap.parameters.redistribution);
-        writer.Write(_tempMap.parameters.offsetX);
-        writer.Write(_tempMap.parameters.offsetY);
-
-        writer.Write(_humidMap.parameters.seed);
-        writer.Write(_humidMap.parameters.size);
-        writer.Write(_humidMap.parameters.octaves);
-        writer.Write(_humidMap.parameters.scale);
-        writer.Write(_humidMap.parameters.persistance);
-        writer.Write(_humidMap.parameters.lacunarity);
-        writer.Write(_humidMap.parameters.redistribution);
-        writer.Write(_humidMap.parameters.offsetX);
-        writer.Write(_humidMap.parameters.offsetY);
-
-        writer.Write(_heightMap.parameters.seed);
-        writer.Write(_heightMap.parameters.size);
-        writer.Write(_heightMap.parameters.octaves);
-        writer.Write(_heightMap.parameters.scale);
-        writer.Write(_heightMap.parameters.persistance);
-        writer.Write(_heightMap.parameters.lacunarity);
-        writer.Write(_heightMap.parameters.redistribution);
-        writer.Write(_heightMap.parameters.offsetX);
-        writer.Write(_heightMap.parameters.offsetY);
-
-        writer.Write(_falloffMap.parameters.seed);
-        writer.Write(_falloffMap.parameters.size);
-        writer.Write(_falloffMap.parameters.octaves);
-        writer.Write(_falloffMap.parameters.scale);
-        writer.Write(_falloffMap.parameters.persistance);
-        writer.Write(_falloffMap.parameters.lacunarity);
-        writer.Write(_falloffMap.parameters.redistribution);
-        writer.Write(_falloffMap.parameters.offsetX);
-        writer.Write(_falloffMap.parameters.offsetY);
-    }
-
-    public static NoiseData ReadFromStream(MemoryStream stream)
-    {
-        BinaryReader reader = new BinaryReader(stream);
-
-        int tempMapSize = reader.ReadInt32();
-        float[,] tempMapNoise = new float[tempMapSize, tempMapSize];
-        for (int y = 0; y < tempMapSize; y++)
-            for (int x = 0; x < tempMapSize; x++)
-                tempMapNoise[x,y] = reader.ReadSingle();
-
-        int humidMapSize = reader.ReadInt32();
-        float[,] humidMapNoise = new float[humidMapSize, humidMapSize];
-        for (int y = 0; y < humidMapSize; y++)
-            for (int x = 0; x < humidMapSize; x++)
-                humidMapNoise[x, y] = reader.ReadSingle();
-
-        int heightMapSize = reader.ReadInt32();
-        float[,] heightMapNoise = new float[heightMapSize, heightMapSize];
-        for (int y = 0; y < heightMapSize; y++)
-            for (int x = 0; x < heightMapSize; x++)
-                heightMapNoise[x, y] = reader.ReadSingle();
-
-        int falloffMapSize = reader.ReadInt32();
-        float[,] falloffMapNoise = new float[falloffMapSize, falloffMapSize];
-        for (int y = 0; y < falloffMapSize; y++)
-            for (int x = 0; x < falloffMapSize; x++)
-                falloffMapNoise[x, y] = reader.ReadSingle();
-
-        Noise.Data.Parameters tempMapParameters = new Noise.Data.Parameters
-        (
-            reader.ReadInt32(),
-            reader.ReadInt32(),
-            reader.ReadInt32(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            new Vector2(reader.ReadSingle(), reader.ReadSingle())
-        );
-        Noise.Data tempMapData = new Noise.Data(tempMapParameters, tempMapNoise);
-
-        Noise.Data.Parameters humidMapParameters = new Noise.Data.Parameters
-        (
-            reader.ReadInt32(),
-            reader.ReadInt32(),
-            reader.ReadInt32(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            new Vector2(reader.ReadSingle(), reader.ReadSingle())
-        );
-        Noise.Data humidMapData = new Noise.Data(humidMapParameters, humidMapNoise);
-
-        Noise.Data.Parameters heightMapParameters = new Noise.Data.Parameters
-        (
-            reader.ReadInt32(),
-            reader.ReadInt32(),
-            reader.ReadInt32(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            new Vector2(reader.ReadSingle(), reader.ReadSingle())
-        );
-        Noise.Data heightMapData = new Noise.Data(heightMapParameters, heightMapNoise);
-
-        Noise.Data.Parameters falloffMapParameters = new Noise.Data.Parameters
-        (
-            reader.ReadInt32(),
-            reader.ReadInt32(),
-            reader.ReadInt32(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            reader.ReadSingle(),
-            new Vector2(reader.ReadSingle(), reader.ReadSingle())
-        );
-        Noise.Data falloffMapData = new Noise.Data(falloffMapParameters, falloffMapNoise);
-
-        NoiseData noiseData = new NoiseData();
-        noiseData._tempMap = tempMapData;
-        noiseData._humidMap = humidMapData;
-        noiseData._heightMap = heightMapData;
-        noiseData._falloffMap = falloffMapData;
-
-        return noiseData;
-    }
 }
 
 public class MeshData
@@ -470,20 +281,20 @@ public class MeshData
     public readonly int vertexSize;
     public readonly int vertexCount;
 
-    private SAbleVector3[] _vertexCoords;
-    public SAbleVector3[] vertexCoords
+    private Vector3[] _vertexCoords;
+    public Vector3[] vertexCoords
     {
         get { return _vertexCoords; }
     }
 
-    private SAbleVector3[] _normals;
-    public SAbleVector3[] normals
+    private Vector3[] _normals;
+    public Vector3[] normals
     {
         get { return _normals; }
     }
 
-    private SAbleVector2[] _UVCoords;
-    public SAbleVector2[] UVCoords
+    private Vector2[] _UVCoords;
+    public Vector2[] UVCoords
     {
         get { return _UVCoords; }
     }
@@ -505,9 +316,9 @@ public class MeshData
         vertexSize = meshSize + 1;
         vertexCount = vertexSize * vertexSize;
 
-        _vertexCoords = new SAbleVector3[vertexCount];
-        _normals = new SAbleVector3[vertexCount];
-        _UVCoords = new SAbleVector2[vertexCount];
+        _vertexCoords = new Vector3[vertexCount];
+        _normals = new Vector3[vertexCount];
+        _UVCoords = new Vector2[vertexCount];
 
         _triVertIDs = new int[triangleCount * 3];
     }
@@ -571,87 +382,13 @@ public class MeshData
         lock (inChunkGenerator.meshDataThreadInfoQueue)
             inChunkGenerator.meshDataThreadInfoQueue.Enqueue(callback);
     }
-
-    public void WriteToStream(Stream stream)
-    {
-        BinaryWriter writer = new BinaryWriter(stream);
-
-
-        writer.Write(meshSize);
-
-        int vertexCoordsLength = _vertexCoords.Length;
-        writer.Write(vertexCoordsLength);
-        for (int i = 0; i < vertexCoordsLength; i++)
-        {
-            writer.Write(_vertexCoords[i].x);
-            writer.Write(_vertexCoords[i].y);
-            writer.Write(_vertexCoords[i].z);
-        }
-
-        int normalsLength = _normals.Length;
-        writer.Write(normalsLength);
-        for (int i = 0; i < normalsLength; i++)
-        {
-            writer.Write(_normals[i].x);
-            writer.Write(_normals[i].y);
-            writer.Write(_normals[i].z);
-        }
-
-        int UVCoordsLength = _UVCoords.Length;
-        writer.Write(UVCoordsLength);
-        for (int i = 0; i < UVCoordsLength; i++)
-        {
-            writer.Write(_UVCoords[i].x);
-            writer.Write(_UVCoords[i].y);
-        }
-
-        int triVertIDsLength = _triVertIDs.Length;
-        writer.Write(triVertIDsLength);
-        for (int i = 0; i < triVertIDsLength; i++)
-            writer.Write(_triVertIDs[i]);
-    }
-
-    public static MeshData ReadFromStream(Stream stream)
-    {
-        BinaryReader reader = new BinaryReader(stream);
-
-        MeshData loadedMeshData = new MeshData(reader.ReadInt32());
-
-        int vertexCoordsLength = reader.ReadInt32();
-        SAbleVector3[] vertexCoords = new SAbleVector3[vertexCoordsLength];
-        for (int i = 0; i < vertexCoordsLength; i++)
-            vertexCoords[i] = new SAbleVector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-
-        int normalsLength = reader.ReadInt32();
-        SAbleVector3[] normals = new SAbleVector3[normalsLength];
-        for (int i = 0; i < normalsLength; i++)
-            normals[i] = new SAbleVector3(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-
-        int UVCoordsLength = reader.ReadInt32();
-        SAbleVector2[] UVCoords = new SAbleVector2[UVCoordsLength];
-        for (int i = 0; i < UVCoordsLength; i++)
-            UVCoords[i] = new SAbleVector2(reader.ReadSingle(), reader.ReadSingle());
-
-
-        int triVertIDsLength = reader.ReadInt32();
-        int[] triVertIDs = new int[triVertIDsLength];
-        for (int i = 0; i < triVertIDsLength; i++)
-            triVertIDs[i] = reader.ReadInt32();
-
-        loadedMeshData._vertexCoords = vertexCoords;
-        loadedMeshData._normals = normals;
-        loadedMeshData._UVCoords = UVCoords;
-        loadedMeshData._triVertIDs = triVertIDs;
-
-        return loadedMeshData;
-    }
 }
 
 public class TextureData
 {
     // Member variables
-    private SAbleColor[] _colorMap;
-    public SAbleColor[] colorMap
+    private Color[] _colorMap;
+    public Color[] colorMap
     {
         get { return _colorMap; }
     }
@@ -667,7 +404,7 @@ public class TextureData
         float[,] heightMap = inNoiseData.heightMap.noise;
 
         // Calculate colormap
-        _colorMap = new SAbleColor[textureSize * textureSize];
+        _colorMap = new Color[textureSize * textureSize];
         for (int y = 0; y < textureSize; y++)
             for (int x = 0; x < textureSize; x++)
                 _colorMap[y * textureSize + x] = tempTerrainGradient.Evaluate(heightMap[x, y]);
@@ -675,40 +412,4 @@ public class TextureData
         lock (inChunkGenerator.textureDataThreadInfoQueue)
             inChunkGenerator.textureDataThreadInfoQueue.Enqueue(callback);
     }
-
-    public void WriteToStream(MemoryStream stream)
-    {
-        BinaryWriter writer = new BinaryWriter(stream);
-
-        int colorMapLength = _colorMap.Length;
-        writer.Write(colorMapLength);
-        for (int i = 0; i < colorMapLength; i++) 
-        {
-            writer.Write(_colorMap[i].r);
-            writer.Write(_colorMap[i].g);
-            writer.Write(_colorMap[i].b);
-            writer.Write(_colorMap[i].a);
-        }
-    }
-
-    public static TextureData ReadFromStream(MemoryStream stream)
-    {
-        BinaryReader reader = new BinaryReader(stream);
-
-        int colorMapLength = reader.ReadInt32();
-        SAbleColor[] colorMap = new SAbleColor[colorMapLength];
-        for (int i = 0; i < colorMapLength; i++)
-            colorMap[i] = new SAbleColor(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-
-        TextureData loadedTextureData = new TextureData();
-        loadedTextureData._colorMap = colorMap;
-        return loadedTextureData;
-    }
 }
-
-
-
-// TODO: Make NoiseData.chunkCoords serializable
-// TODO: Make World.WorldGenData serializable
-// TODO: Remove NoiseData.chunkGenerator and pass it through the generate method instead
-// TODO: Remove NoiseData member variable from MeshData and TextureData since it can be passed through the generate method

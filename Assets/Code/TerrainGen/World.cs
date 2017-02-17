@@ -108,6 +108,7 @@ public class World : MonoBehaviour
     private Transform _cameraControllerTransform;
     private bool _isGeneratingChunks = false;
 
+    private HashSet<Vector2> _foundChunks = new HashSet<Vector2>();
 
     [SerializeField] private GameObject _townPrefab;
 
@@ -115,9 +116,6 @@ public class World : MonoBehaviour
     /* Start, Update */
     void Start()
     {
-        // Make sure Chunks folder exist for chunks to be loaded to/from
-        System.IO.Directory.CreateDirectory(Application.dataPath + @"\..\Chunks");
-
         _chunkGenerator = GetComponent<ChunkGenerator>();
         _cameraControllerTransform = Camera.main.transform.parent;
     }
@@ -139,6 +137,8 @@ public class World : MonoBehaviour
         while(_chunksToGenerateCoordsQueue.Count > 0)
         {
             _worldChunks.Add(_chunksToGenerateCoordsQueue[0], _chunkGenerator.GenerateChunk(_chunksToGenerateCoordsQueue[0]));
+
+            _foundChunks.Add(_chunksToGenerateCoordsQueue[0]);
 
             _chunksToGenerateCoordsQueue.RemoveAt(0);
 
@@ -162,8 +162,6 @@ public class World : MonoBehaviour
     {
         while (_chunksToRemoveCoordsQueue.Count > 0)
         {
-            _worldChunks[_chunksToRemoveCoordsQueue[0]].chunkData.SaveToDisk(Application.dataPath + @"\..\Chunks\" + _chunksToRemoveCoordsQueue[0].x.ToString() + "." + _chunksToRemoveCoordsQueue[0].y.ToString() + ".dat");
-
             Destroy(_worldChunks[_chunksToRemoveCoordsQueue[0]].gameObject);
             _worldChunks.Remove(_chunksToRemoveCoordsQueue[0]);
             _chunksToRemoveCoordsQueue.RemoveAt(0);
@@ -232,7 +230,6 @@ public class World : MonoBehaviour
 // TODO: Replace the lists with actual Queues? 
 // TODO: Rewrite the way chunks to delete and generate is determined
 // TODO: Implement BIOMES ALREADY AAH
-// TODO: See if the regenerate Texture / Mesh methods still work or can be repaired if they don't
 
 /* TODO LIST */
 /*

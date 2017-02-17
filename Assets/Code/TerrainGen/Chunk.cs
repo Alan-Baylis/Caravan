@@ -38,19 +38,6 @@ public class Chunk
 
             return false;
         }
-
-        public void SaveToDisk(string filePath)
-        {
-            MemoryStream memStream = new MemoryStream();
-
-            noiseData.WriteToStream(memStream);
-            meshData.WriteToStream(memStream);
-            textureData.WriteToStream(memStream);
-
-            byte[] _dataToSave = memStream.ToArray();
-
-            File.WriteAllBytes(filePath, _dataToSave);
-        }
     }
     private ChunkData _chunkData;
     public ChunkData chunkData
@@ -83,18 +70,6 @@ public class Chunk
     }
 
     // Internal
-    public void SaveToDisk()
-    {
-        MemoryStream memoryStream = new MemoryStream();
-
-        BinaryFormatter binaryFormatter = new BinaryFormatter();
-        binaryFormatter.Serialize(memoryStream, chunkData);
-
-        byte[] _noiseDataBytes = memoryStream.ToArray();
-
-        File.WriteAllBytes(Application.dataPath + @"\..\Chunks\" + coords.x.ToString() + "." + coords.y.ToString() + ".dat", _noiseDataBytes);
-    }
-
     private void GenerateTowns()
     {
         int townGenerationTries = Random.Range(0, 5);  // TODO - In order to make worlds generate identically every time, a global seed value is probably needed. So yeah, implement global seed value
