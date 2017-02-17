@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Town : MonoBehaviour
 {
-    public int WoodAmount { get; set; }
-    public int WoodBuyPrice { get; set; }
-    public int WoodSellPrice { get; set; }
+    public int woodAmount;
+    public int woodBuyPrice;
+    public int woodSellPrice;
     void Start()
     {
-        WoodAmount = Random.Range(5, 10);
-        WoodBuyPrice = Random.Range(20, 40);
-        WoodSellPrice = WoodBuyPrice;
+        woodAmount = Random.Range(5, 10);
+        woodBuyPrice = Random.Range(20, 40);
+        woodSellPrice = woodBuyPrice;
     }
 }
