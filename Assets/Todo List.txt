@@ -9,13 +9,29 @@
 
 
 
+
+
+
+
 /* TODO LIST */
-/*
- *  - Implement thermal erosion
- *  - Implement hydraulic eriosion
- *  - Rewrite ChunkGenerator in such way that it doesn't have to be a monobehaviour. Terrain generation should be orchestrated by World with the other classes being used by it
- *  - Create a few more interesting biomes using the BiomeManager
- *  - Make trees combine into single mesh (vector math needed to calculate position.)
- *  - Add back basic player movement and trading
- *  - Refactor te spawning of trees and towns. ChunkGenerator should handle all that stuff.
- */
+High Prio:
+	- Make trees combine into single mesh (vector math needed to calculate position.)
+	- Refactor te spawning of trees and towns. ChunkGenerator should handle all that stuff.
+
+Med Prio:
+	- Add back basic player movement and trading
+	- Rewrite ChunkGenerator in such way that it doesn't have to be a monobehaviour. Terrain generation should be orchestrated by World with the other classes being used by it
+	- Create a few more interesting biomes using the BiomeManager
+	- Go through Chunk.cs and do small optimizations
+	- Go through ChunkGenerator.cs and do small optimizations
+	- Go through World.cs and do small optimizations
+
+Low Prio:
+	- Implement thermal erosion
+	- Implement hydraulic eriosion
+	- Make it possible to slow down / increase the time speed
+
+
+
+Finished:
+	
