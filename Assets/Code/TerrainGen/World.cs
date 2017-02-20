@@ -223,12 +223,6 @@ public class World : MonoBehaviour
     }
 }
 
-// TODO: Assign every vertice a biome, have biome specific terrain gen values
-// TODO: Erosion n shiet
-// TODO: Replace the lists with actual Queues? 
-// TODO: Rewrite the way chunks to delete and generate is determined
-// TODO: Implement BIOMES ALREADY AAH
-
 /* TODO LIST */
 /*
  *  - Every quad is represented by the values of its top left vertex. Assign every vertex a specific biome.
@@ -236,4 +230,5 @@ public class World : MonoBehaviour
  *  - Implement thermal erosion
  *  - Implement hydraulic eriosion
  *  - Rewrite how the delete and generation queues are populated
+ *  - Rewrite ChunkGenerator in such way that it doesn't have to be a monobehaviour. Terrain generation should be orchestrated by World with the other classes being used by it
  */
