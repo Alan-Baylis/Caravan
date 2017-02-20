@@ -26,8 +26,11 @@ public class Chunk
         set
         {
             _noiseData = value;
-            if (!_world.previouslyFullyGeneratedChunks.Contains(_coords))
+            if (!_world.previouslyGeneratedChunks.Contains(_coords))
+            {
                 GenerateTowns();
+                GenerateTrees();
+            }
         }
     }
 
@@ -63,6 +66,25 @@ public class Chunk
                 _world.GenerateTown(newTownWorldSpacePosition);
         }
 
-        _world.previouslyFullyGeneratedChunks.Add(_coords);
+        _world.previouslyGeneratedChunks.Add(_coords);
+    }
+
+    private void GenerateTrees()
+    {
+        int treeGenerationTries = Random.Range(100, 500);
+        int chunkSize = _world.worldGenData.chunkSize;
+
+        for (int i = 0; i < treeGenerationTries; i++)
+        {
+            Vector2 newTreePosition = new Vector2(Random.Range(0, chunkSize), Random.Range(0, chunkSize));
+            float targetTileHeight = GetTileHeight((int)newTreePosition.x, (int)newTreePosition.y);
+            if (_world.biomeManager.GetBiome(targetTileHeight).biomeType != BiomeType.Forest)
+                continue;
+
+
+            Vector3 newTreeWorldSpacePosition = new Vector3(newTreePosition.x + (chunkSize * coords.x), (targetTileHeight * _world.worldGenData.heightMultiplierCurve.Evaluate(targetTileHeight) * _world.worldGenData.meshHeightMultiplier) + 2, newTreePosition.y - (chunkSize * coords.y));
+
+            _world.GenerateTree(newTreeWorldSpacePosition);
+        }
     }
 }

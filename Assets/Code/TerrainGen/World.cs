@@ -28,7 +28,7 @@ public class WorldEditor : Editor
 public class World : MonoBehaviour
 {
     /* Member variables */
-    public HashSet<Vector2> previouslyFullyGeneratedChunks = new HashSet<Vector2>();
+    public HashSet<Vector2> previouslyGeneratedChunks = new HashSet<Vector2>();
     
     [SerializeField]
     private WorldGenData _worldGenData;
@@ -82,6 +82,12 @@ public class World : MonoBehaviour
 
     private ChunkGenerator _chunkGenerator;
 
+    private BiomeManager _biomeManager;
+    public BiomeManager biomeManager
+    {
+        get { return _biomeManager; }
+    }
+
     private Dictionary<Vector2, Chunk> _worldChunks = new Dictionary<Vector2, Chunk>();
     public Dictionary<Vector2, Chunk> worldChunks
     {
@@ -110,12 +116,14 @@ public class World : MonoBehaviour
 
 
     [SerializeField] private GameObject _townPrefab;
-
+    [SerializeField] private GameObject _treePrefab;
 
     /* Start, Update */
     void Start()
     {
         _chunkGenerator = GetComponent<ChunkGenerator>();
+        _biomeManager = GetComponent<BiomeManager>();
+
         _cameraControllerTransform = Camera.main.transform.parent;
     }
 
@@ -219,6 +227,17 @@ public class World : MonoBehaviour
         newTown.transform.position = inWorldPosition;
 
         return newTown;
+    }
+    
+    public GameObject GenerateTree(Vector3 inWorldPosition)
+    {
+        GameObject newTree = Instantiate(_treePrefab);
+
+        newTree.transform.position = inWorldPosition;
+
+        newTree.isStatic = true;
+
+        return newTree;
     }
 }
 
