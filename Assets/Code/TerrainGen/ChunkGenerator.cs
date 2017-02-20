@@ -89,7 +89,7 @@ public class ChunkGenerator : MonoBehaviour
 
     private void RequestMeshData(NoiseData inNoiseData, Chunk inChunk)
     {
-        MeshData meshData = new MeshData(inChunk.world.worldGenData.chunkSize);
+        MeshData meshData = new MeshData(_world.worldGenData.chunkSize);
         Action callbackMethod = new Action(() => OnMeshDataReceived(meshData, inChunk));
 
         ThreadStart threadStart = delegate { meshData.Generate(callbackMethod, inNoiseData, _world.worldGenData, this); };
@@ -111,9 +111,7 @@ public class ChunkGenerator : MonoBehaviour
     // Callback methods
     private void OnNoiseDataReceived(NoiseData inNoiseData, Chunk inChunk)
     {
-        Chunk.ChunkData newChunkData = inChunk.chunkData;
-        newChunkData.noiseData = inNoiseData;
-        inChunk.chunkData = newChunkData;
+        inChunk.noiseData = inNoiseData;
 
         RequestMeshData(inNoiseData, inChunk);
 
@@ -137,10 +135,6 @@ public class ChunkGenerator : MonoBehaviour
         newMesh.RecalculateNormals();
 
         inChunk.gameObject.GetComponent<MeshFilter>().mesh = newMesh;
-
-        Chunk.ChunkData newChunkData = inChunk.chunkData;
-        newChunkData.meshData = inMeshData;
-        inChunk.chunkData = newChunkData;
     }
 
     private void OnTextureReceived(TextureData inTextureData, Chunk inChunk)
@@ -148,7 +142,7 @@ public class ChunkGenerator : MonoBehaviour
         if (inChunk.gameObject == null)
             return;
 
-        int chunkSize = inChunk.world.worldGenData.chunkSize;
+        int chunkSize = _world.worldGenData.chunkSize;
 
         Texture2D texture = new Texture2D(chunkSize, chunkSize);
         texture.filterMode = FilterMode.Trilinear;
@@ -160,12 +154,7 @@ public class ChunkGenerator : MonoBehaviour
         texture.Apply();
 
         inChunk.gameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
-
-        Chunk.ChunkData newChunkData = inChunk.chunkData;
-        newChunkData.textureData = inTextureData;
-        inChunk.chunkData = newChunkData;
     }
-    
 
     /* External Methods */
     public Chunk GenerateChunk(Vector2 inChunkCoords)

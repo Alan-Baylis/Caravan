@@ -5,12 +5,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class Chunk
 {
-    // Member variabless
+    // Member variables
     private World _world;
-    public World world
-    {
-        get { return _world; }
-    }
 
     private GameObject _gameObject;
     public GameObject gameObject
@@ -24,29 +20,15 @@ public class Chunk
         get { return _coords; }
     }
 
-    [System.Serializable]
-    public struct ChunkData
+    private NoiseData _noiseData;
+    public NoiseData noiseData
     {
-        public NoiseData noiseData;
-        public MeshData meshData;
-        public TextureData textureData;
-
-        public bool IsComplete()
+        set
         {
-            if (noiseData != null && meshData != null && textureData != null)
-                return true;
-
-            return false;
             _noiseData = value;
             if (!_world.previouslyFullyGeneratedChunks.Contains(_coords))
                 GenerateTowns();
         }
-    }
-    private ChunkData _chunkData;
-    public ChunkData chunkData
-    {
-        get { return _chunkData; }
-        set { _chunkData = value; }
     }
 
 
@@ -58,18 +40,9 @@ public class Chunk
         _world = inWorld;
     }
 
-    public Chunk(Vector2 inChunkCoords, GameObject inGameObject, World inWorld, ChunkData inChunkData)
-    {
-        _gameObject = inGameObject;
-        _coords = inChunkCoords;
-        _world = inWorld;
-        _chunkData = inChunkData;
-    }
-
     // External
     public float GetTileHeight(int xCoord, int yCoord)
     {
-        return _chunkData.noiseData.heightMap.noise[xCoord, yCoord]; // WARNING: Do mind this is temporary since biomes will be implemented
         return _noiseData.heightMap.noise[xCoord, yCoord]; // WARNING: Do mind this is temporary since biomes will be implemented
     }
 
