@@ -318,50 +318,6 @@ MonoBehaviour:
   _worldGenData:
     chunkSize: 124
     renderDistance: 13
-    tempTerrainGradient:
-      key0:
-        serializedVersion: 2
-        rgba: 4288967214
-      key1:
-        serializedVersion: 2
-        rgba: 4290150943
-      key2:
-        serializedVersion: 2
-        rgba: 5347533
-      key3:
-        serializedVersion: 2
-        rgba: 4359014
-      key4:
-        serializedVersion: 2
-        rgba: 4036718
-      key5:
-        serializedVersion: 2
-        rgba: 5350267
-      key6:
-        serializedVersion: 2
-        rgba: 8099990
-      key7:
-        serializedVersion: 2
-        rgba: 16777215
-      ctime0: 66
-      ctime1: 3662
-      ctime2: 5397
-      ctime3: 13107
-      ctime4: 23130
-      ctime5: 26985
-      ctime6: 50501
-      ctime7: 65535
-      atime0: 0
-      atime1: 65535
-      atime2: 0
-      atime3: 0
-      atime4: 0
-      atime5: 0
-      atime6: 0
-      atime7: 0
-      m_Mode: 1
-      m_NumColorKeys: 8
-      m_NumAlphaKeys: 2
     meshHeightMultiplier: 100
     heightMultiplierCurve:
       serializedVersion: 2
@@ -436,6 +392,8 @@ MonoBehaviour:
     falloffLacunarity: 1.42
     falloffRedistribution: 0.2
   _townPrefab: {fileID: 1846853551077198, guid: aa39a6061a653604aa7e917d25526f5c,
+    type: 2}
+  _treePrefab: {fileID: 1156489930412784, guid: 75b4688383e8c2b4b9a8cd0faced4a45,
     type: 2}
 --- !u!4 &1482609950
 Transform:
