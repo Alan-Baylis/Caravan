@@ -245,15 +245,3 @@ public class World : MonoBehaviour
     }
 }
 
-/* TODO LIST */
-/*
- *  - Every quad is represented by the values of its top left vertex. Assign every vertex a specific biome.
- *  - Have biomes use specific terrain gen values
- *  - Implement thermal erosion
- *  - Implement hydraulic eriosion
- *  - Rewrite how the delete and generation queues are populated
- *  - Rewrite ChunkGenerator in such way that it doesn't have to be a monobehaviour. Terrain generation should be orchestrated by World with the other classes being used by it
- *  - Implement global seed to make a world perfectly replicable
- *  - Create a few more interesting biomes using the BiomeManager
- *  - Make a class dedicated to the spawning of towns?
- */

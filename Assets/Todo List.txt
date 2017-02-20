@@ -1,0 +1,21 @@
+﻿
+
+
+
+
+
+
+
+
+
+
+/* TODO LIST */
+/*
+ *  - Implement thermal erosion
+ *  - Implement hydraulic eriosion
+ *  - Rewrite ChunkGenerator in such way that it doesn't have to be a monobehaviour. Terrain generation should be orchestrated by World with the other classes being used by it
+ *  - Create a few more interesting biomes using the BiomeManager
+ *  - Make trees combine into single mesh (vector math needed to calculate position.)
+ *  - Add back basic player movement and trading
+ *  - Refactor te spawning of trees and towns. ChunkGenerator should handle all that stuff.
+ */
