@@ -37,6 +37,9 @@ public class Chunk
                 return true;
 
             return false;
+            _noiseData = value;
+            if (!_world.previouslyFullyGeneratedChunks.Contains(_coords))
+                GenerateTowns();
         }
     }
     private ChunkData _chunkData;
@@ -67,6 +70,7 @@ public class Chunk
     public float GetTileHeight(int xCoord, int yCoord)
     {
         return _chunkData.noiseData.heightMap.noise[xCoord, yCoord]; // WARNING: Do mind this is temporary since biomes will be implemented
+        return _noiseData.heightMap.noise[xCoord, yCoord]; // WARNING: Do mind this is temporary since biomes will be implemented
     }
 
     // Internal
@@ -85,6 +89,8 @@ public class Chunk
             if (targetTileHeight > 0.2f && targetTileHeight < 0.4f)
                 _world.GenerateTown(newTownWorldSpacePosition);
         }
+
+        _world.previouslyFullyGeneratedChunks.Add(_coords);
     }
 }
 

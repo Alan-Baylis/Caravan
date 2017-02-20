@@ -28,6 +28,7 @@ public class WorldEditor : Editor
 public class World : MonoBehaviour
 {
     /* Member variables */
+    public HashSet<Vector2> previouslyFullyGeneratedChunks = new HashSet<Vector2>();
     
     [SerializeField]
     private WorldGenData _worldGenData;
@@ -108,7 +109,6 @@ public class World : MonoBehaviour
     private Transform _cameraControllerTransform;
     private bool _isGeneratingChunks = false;
 
-    private HashSet<Vector2> _foundChunks = new HashSet<Vector2>();
 
     [SerializeField] private GameObject _townPrefab;
 
@@ -137,8 +137,6 @@ public class World : MonoBehaviour
         while(_chunksToGenerateCoordsQueue.Count > 0)
         {
             _worldChunks.Add(_chunksToGenerateCoordsQueue[0], _chunkGenerator.GenerateChunk(_chunksToGenerateCoordsQueue[0]));
-
-            _foundChunks.Add(_chunksToGenerateCoordsQueue[0]);
 
             _chunksToGenerateCoordsQueue.RemoveAt(0);
 
