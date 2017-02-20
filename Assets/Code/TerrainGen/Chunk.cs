@@ -66,15 +66,3 @@ public class Chunk
         _world.previouslyFullyGeneratedChunks.Add(_coords);
     }
 }
-
-public enum Biome
-{
-    Water_Deep,
-    Water_Shallow,
-    Beach,
-    Forest,
-    Plains,
-    Hills,
-    Mountain,
-    Mountain_Snowy
-}

@@ -11,6 +11,13 @@ public class ChunkGenerator : MonoBehaviour
     /* Member Variables */
     private World _world;
 
+    private BiomeManager _biomeManager;
+    public BiomeManager biomeManager
+    {
+        get { return _biomeManager; }
+    }
+
+
     private Queue<Action> _noiseDataThreadInfoQueue = new Queue<Action>();
     public Queue<Action> noiseDataThreadInfoQueue
     {
@@ -40,6 +47,7 @@ public class ChunkGenerator : MonoBehaviour
     void Start()
     {
         _world = GetComponent<World>();
+        _biomeManager = GetComponent<BiomeManager>();
     }
 
     void Update()
@@ -156,6 +164,7 @@ public class ChunkGenerator : MonoBehaviour
         inChunk.gameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
     }
 
+
     /* External Methods */
     public Chunk GenerateChunk(Vector2 inChunkCoords)
     {
@@ -198,10 +207,10 @@ public class NoiseData
         get { return _falloffMap; }
     }
 
-    // Constructor
+
     public NoiseData(){}
-       
-    // External methods
+
+
     public void Generate(Action callback, Vector2 inChunkCoords, World.WorldGenData inWorldGenData, ChunkGenerator inChunkGenerator)
     {
         _tempMap = Noise.GenerateNoiseData
@@ -263,7 +272,6 @@ public class NoiseData
 
 public class MeshData
 {
-    // Member variables
     public readonly int meshSize;
     public readonly int tileCount;
     public readonly int triangleCount;
@@ -294,7 +302,7 @@ public class MeshData
         get { return _triVertIDs; }
     }
 
-    // Constructor
+    
     public MeshData(int inMeshSize)
     {
         meshSize = inMeshSize;
@@ -312,7 +320,7 @@ public class MeshData
         _triVertIDs = new int[triangleCount * 3];
     }
 
-    // External methods
+
     public void Generate(Action callback, NoiseData inNoiseData, World.WorldGenData inWorldGenData, ChunkGenerator inChunkGenerator)
     {
         AnimationCurve heightMultiplierCurve = new AnimationCurve(inWorldGenData.heightMultiplierCurve.keys);
@@ -375,28 +383,27 @@ public class MeshData
 
 public class TextureData
 {
-    // Member variables
     private Color[] _colorMap;
     public Color[] colorMap
     {
         get { return _colorMap; }
     }
 
-    // Constructor
+
     public TextureData(){}
 
-    // External methods
+
     public void Generate(Action callback, NoiseData inNoiseData, World.WorldGenData inWorldGenData, ChunkGenerator inChunkGenerator)
     {
         int textureSize = inWorldGenData.chunkSize;
-        Gradient tempTerrainGradient = inWorldGenData.tempTerrainGradient;
         float[,] heightMap = inNoiseData.heightMap.noise;
+        BiomeManager biomeManager = inChunkGenerator.biomeManager;
 
         // Calculate colormap
         _colorMap = new Color[textureSize * textureSize];
         for (int y = 0; y < textureSize; y++)
             for (int x = 0; x < textureSize; x++)
-                _colorMap[y * textureSize + x] = tempTerrainGradient.Evaluate(heightMap[x, y]);
+                _colorMap[y * textureSize + x] = biomeManager.GetBiome(heightMap[x, y]).color;
 
         lock (inChunkGenerator.textureDataThreadInfoQueue)
             inChunkGenerator.textureDataThreadInfoQueue.Enqueue(callback);

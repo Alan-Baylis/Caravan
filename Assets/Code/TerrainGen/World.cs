@@ -44,7 +44,6 @@ public class World : MonoBehaviour
         [Range(16, 124)]
         public int chunkSize;                           // Chunk size in quads
         public int renderDistance;                      // Render distance in chunks. Should be an odd number.
-        public Gradient tempTerrainGradient;            // Gradient used in order to color the terrain
         public float meshHeightMultiplier;              // Number used to determine how much the height map affects the terrain mesh
         public AnimationCurve heightMultiplierCurve;    // Curve used to determine how much the height map affects the terrain mesh at different values
 
