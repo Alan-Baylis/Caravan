@@ -226,6 +226,8 @@ public class World : MonoBehaviour
 
         newTown.transform.position = inWorldPosition;
 
+        newTown.transform.SetParent(_worldChunks[GetChunkCoord(inWorldPosition)].gameObject.transform);
+
         return newTown;
     }
     
@@ -236,6 +238,8 @@ public class World : MonoBehaviour
         newTree.transform.position = inWorldPosition;
 
         newTree.isStatic = true;
+
+        newTree.transform.SetParent(_worldChunks[GetChunkCoord(inWorldPosition)].gameObject.transform);
 
         return newTree;
     }

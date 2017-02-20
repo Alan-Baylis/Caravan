@@ -26,11 +26,9 @@ public class Chunk
         set
         {
             _noiseData = value;
-            if (!_world.previouslyGeneratedChunks.Contains(_coords))
-            {
-                GenerateTowns();
-                GenerateTrees();
-            }
+
+            GenerateTowns();
+            GenerateTrees();
         }
     }
 
@@ -54,9 +52,12 @@ public class Chunk
     {
         int townGenerationTries = Random.Range(0, 5);  // TODO - In order to make worlds generate identically every time, a global seed value is probably needed. So yeah, implement global seed value
         int chunkSize = _world.worldGenData.chunkSize;
+
+        Random.InitState(_coords.GetHashCode());
         
         for (int i = 0; i < townGenerationTries; i++)
         {
+
             Vector2 newTownPosition = new Vector2(Random.Range(0, chunkSize), Random.Range(0, chunkSize));
             float targetTileHeight = GetTileHeight((int)newTownPosition.x, (int)newTownPosition.y);
 
@@ -73,6 +74,10 @@ public class Chunk
     {
         int treeGenerationTries = Random.Range(100, 500);
         int chunkSize = _world.worldGenData.chunkSize;
+
+        _coords.GetHashCode();
+
+        Random.InitState(_coords.GetHashCode());
 
         for (int i = 0; i < treeGenerationTries; i++)
         {
