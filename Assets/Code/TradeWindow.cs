@@ -14,9 +14,9 @@ public class TradeWindow : MonoBehaviour
     {
         Town currentTown = player.GetComponent<Player>().currentTown;
 
-        woodText.GetComponent<Text>().text = "Wood: " + currentTown.WoodAmount.ToString();
-        buyButton.transform.GetChild(0).GetComponent<Text>().text = "Buy: " + currentTown.WoodBuyPrice.ToString();
-        sellButton.transform.GetChild(0).GetComponent<Text>().text = "Sell: " + currentTown.WoodSellPrice.ToString();
+        woodText.GetComponent<Text>().text = "Wood: " + currentTown.woodAmount.ToString();
+        buyButton.transform.GetChild(0).GetComponent<Text>().text = "Buy: " + currentTown.woodBuyPrice.ToString();
+        sellButton.transform.GetChild(0).GetComponent<Text>().text = "Sell: " + currentTown.woodSellPrice.ToString();
     }
 
     public void SellWood()
@@ -24,9 +24,9 @@ public class TradeWindow : MonoBehaviour
         if (player.GetComponent<Player>().WoodAmount > 0)
         {
             player.GetComponent<Player>().WoodAmount--;
-            player.GetComponent<Player>().currentTown.WoodAmount++;
-            woodText.GetComponent<Text>().text = "Wood: " + player.GetComponent<Player>().currentTown.WoodAmount.ToString();
-            player.GetComponent<Player>().GoldAmount += player.GetComponent<Player>().currentTown.WoodSellPrice;
+            player.GetComponent<Player>().currentTown.woodAmount++;
+            woodText.GetComponent<Text>().text = "Wood: " + player.GetComponent<Player>().currentTown.woodAmount.ToString();
+            player.GetComponent<Player>().GoldAmount += player.GetComponent<Player>().currentTown.woodSellPrice;
 
             player.GetComponent<Player>().UpdateOnScreenText();
         }
@@ -35,12 +35,12 @@ public class TradeWindow : MonoBehaviour
     public void BuyWood()
     {
         Town currentTown = player.GetComponent<Player>().currentTown;
-        if (player.GetComponent<Player>().GoldAmount >= currentTown.WoodBuyPrice && currentTown.WoodAmount > 0)
+        if (player.GetComponent<Player>().GoldAmount >= currentTown.woodBuyPrice && currentTown.woodAmount > 0)
         {
             player.GetComponent<Player>().WoodAmount++;
-            player.GetComponent<Player>().currentTown.WoodAmount--;
-            woodText.GetComponent<Text>().text = "Wood: " + player.GetComponent<Player>().currentTown.WoodAmount.ToString();
-            player.GetComponent<Player>().GoldAmount -= player.GetComponent<Player>().currentTown.WoodBuyPrice;
+            player.GetComponent<Player>().currentTown.woodAmount--;
+            woodText.GetComponent<Text>().text = "Wood: " + player.GetComponent<Player>().currentTown.woodAmount.ToString();
+            player.GetComponent<Player>().GoldAmount -= player.GetComponent<Player>().currentTown.woodBuyPrice;
 
             player.GetComponent<Player>().UpdateOnScreenText();
         }

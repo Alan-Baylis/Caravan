@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-enum NodeState {
-    SUCCESS,
-    FAIL,
-    RUNNING
-}
-
-namespace Assets.Code.BehaviourTree
+namespace BehaviourTree
 {
-    interface BaseNode
+    public enum NodeState {
+        SUCCESS,
+        FAIL,
+        RUNNING,
+        ERROR
+    }
+
+    public abstract class BaseNode
     {
-        NodeState GetValue();
+        System.Guid UUID;
+        public BaseNode()
+        {
+            UUID = System.Guid.NewGuid();
+        }
+
+        abstract public NodeState Tick();
     }
 }
