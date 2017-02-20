@@ -87,3 +87,15 @@ public class Chunk
         }
     }
 }
+
+public enum Biome
+{
+    Water_Deep,
+    Water_Shallow,
+    Beach,
+    Forest,
+    Plains,
+    Hills,
+    Mountain,
+    Mountain_Snowy
+}
