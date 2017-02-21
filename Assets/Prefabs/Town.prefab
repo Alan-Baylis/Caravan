@@ -21,9 +21,8 @@ GameObject:
   - component: {fileID: 4905412848394928}
   - component: {fileID: 33650311754053028}
   - component: {fileID: 23266922439948628}
-  - component: {fileID: 95128285465148924}
   m_Layer: 0
-  m_Name: Town 1
+  m_Name: Town
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83,20 +82,3 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1616813731934352}
   m_Mesh: {fileID: 4300000, guid: 96ad21de2596ed74a988c1af8703761f, type: 3}
---- !u!95 &95128285465148924
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1616813731934352}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 96ad21de2596ed74a988c1af8703761f, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
