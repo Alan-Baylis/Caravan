@@ -80,6 +80,9 @@ public class ChunkGenerator : MonoBehaviour
         newGO.transform.SetParent(transform);
         newGO.transform.position = new Vector3(inChunkCoords.x * _world.worldGenData.chunkSize, 0, -inChunkCoords.y * _world.worldGenData.chunkSize);
         newGO.GetComponent<MeshRenderer>().material.SetFloat("_Glossiness", 0.25f);
+
+        newGO.isStatic = true;
+
         return newGO;
     }
 
