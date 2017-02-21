@@ -15,7 +15,6 @@
 
 /* TODO LIST */
 High Prio:
-	- Make trees combine into single mesh (vector math needed to calculate position.)
 	- Add back basic player movement and trading
 
 Med Prio:
@@ -33,6 +32,7 @@ Low Prio:
 
 Finished:
 	- Refactor te spawning of trees and towns. ChunkGenerator should handle all that stuff.
+	- Make trees combine into single mesh
 	
 
 
