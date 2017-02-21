@@ -15,7 +15,7 @@
 
 /* TODO LIST */
 High Prio:
-	- Add back basic player movement and trading
+	- Add basic player movement and trading
 
 Med Prio:
 	- Create a few more interesting biomes using the BiomeManager
@@ -27,7 +27,7 @@ Low Prio:
 	- Implement thermal erosion
 	- Implement hydraulic eriosion
 	- Make it possible to slow down / increase the time speed
-
+	- Make Regenerate work with Chunk Objects
 
 
 Finished:
