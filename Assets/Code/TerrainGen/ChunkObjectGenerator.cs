@@ -46,7 +46,7 @@ public class ChunkObjectGenerator : MonoBehaviour
     {
         // Calculate gen tries. If 0, return empty array
         int treeGenerationTries = Random.Range(_chunkObjectGenTries.pineMin, _chunkObjectGenTries.pineMax);
-        if (treeGenerationTries <= 0)
+        if (treeGenerationTries <= 0 || !inChunk.gameObject)
             return new GameObject[0];
 
         // Try to generate GenTries amount of trees, and add them to generatedTrees
@@ -110,7 +110,7 @@ public class ChunkObjectGenerator : MonoBehaviour
     {
         // Calculate gen tries. If 0, return empty array
         int townGenerationTries = Random.Range(_chunkObjectGenTries.townMin, _chunkObjectGenTries.townMax);
-        if (townGenerationTries <= 0)
+        if (townGenerationTries <= 0 || !inChunk.gameObject)
             return new GameObject[0];
 
         List<GameObject> generatedTowns = new List<GameObject>();

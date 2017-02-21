@@ -132,6 +132,9 @@ public class ChunkGenerator : MonoBehaviour
 
     private void OnMeshDataReceived(MeshData inMeshData, Chunk inChunk)
     {
+        if (!inChunk.gameObject)
+            return;
+
         Mesh chunkMesh = inChunk.gameObject.GetComponent<MeshFilter>().mesh;
 
         chunkMesh.name = "Terrain Mesh";
@@ -146,6 +149,9 @@ public class ChunkGenerator : MonoBehaviour
 
     private void OnTextureReceived(TextureData inTextureData, Chunk inChunk)
     {
+        if (!inChunk.gameObject)
+            return;
+
         Material chunkMeshMaterial = inChunk.gameObject.GetComponent<MeshRenderer>().material;
 
         if (!chunkMeshMaterial.mainTexture)
