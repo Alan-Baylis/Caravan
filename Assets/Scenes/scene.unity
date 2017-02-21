@@ -297,6 +297,7 @@ GameObject:
   - component: {fileID: 1482609952}
   - component: {fileID: 1482609949}
   - component: {fileID: 1482609951}
+  - component: {fileID: 1482609953}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -391,10 +392,6 @@ MonoBehaviour:
     falloffPersistance: 0.7
     falloffLacunarity: 1.42
     falloffRedistribution: 0.2
-  _townPrefab: {fileID: 1846853551077198, guid: aa39a6061a653604aa7e917d25526f5c,
-    type: 2}
-  _treePrefab: {fileID: 1156489930412784, guid: 75b4688383e8c2b4b9a8cd0faced4a45,
-    type: 2}
 --- !u!4 &1482609950
 Transform:
   m_ObjectHideFlags: 0
@@ -449,6 +446,25 @@ MonoBehaviour:
     color: {r: 0.5882353, g: 0.59607846, b: 0.48235297, a: 1}
   - biomeType: 8
     color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1482609953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1482609948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78ac7872904ba67449c4d50f4eebb9d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _chunkObjects:
+  - {fileID: 1156489930412784, guid: 75b4688383e8c2b4b9a8cd0faced4a45, type: 2}
+  - {fileID: 1846853551077198, guid: aa39a6061a653604aa7e917d25526f5c, type: 2}
+  _chunkObjectGenTries:
+    pineMin: 100
+    pineMax: 500
+    townMin: 0
+    townMax: 4
 --- !u!1 &1501864685
 GameObject:
   m_ObjectHideFlags: 0
