@@ -72,6 +72,7 @@ public class ChunkObjectGenerator : MonoBehaviour
             generatedTrees.Add(newTree);
         }
 
+
         // If more than 0 trees managed to get generated, child them to an object 
         if (generatedTrees.Count > 0)
         {
@@ -79,9 +80,28 @@ public class ChunkObjectGenerator : MonoBehaviour
             treesParentGO.transform.SetParent(inChunk.gameObject.transform);
 
             for (int i = 0; i < generatedTrees.Count; i++)
+            {
                 generatedTrees[i].transform.SetParent(treesParentGO.transform);
-        }
+            }
 
+            MeshFilter[] treeMeshFilters = treesParentGO.GetComponentsInChildren<MeshFilter>();
+            CombineInstance[] treeCombines = new CombineInstance[treeMeshFilters.Length];
+
+            for (int i = 0; i < treeMeshFilters.Length; i++)
+            {
+                treeCombines[i].mesh = treeMeshFilters[i].sharedMesh;
+                treeCombines[i].transform = treeMeshFilters[i].transform.localToWorldMatrix;
+                treeMeshFilters[i].gameObject.SetActive(false);
+            }
+
+            MeshFilter treesParentMeshFilter = treesParentGO.AddComponent<MeshFilter>();
+            treesParentMeshFilter.mesh = new Mesh();
+            treesParentMeshFilter.mesh.CombineMeshes(treeCombines);
+            treesParentMeshFilter.gameObject.SetActive(true);
+
+            MeshRenderer treesParentMeshRenderer = treesParentGO.AddComponent<MeshRenderer>();
+            treesParentMeshRenderer.sharedMaterial = generatedTrees[0].GetComponent<MeshRenderer>().sharedMaterial;
+        }
 
         return generatedTrees.ToArray();
     }
