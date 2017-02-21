@@ -130,7 +130,7 @@ public class ChunkObjectGenerator : MonoBehaviour
                 case BiomeType.Plains:
                 case BiomeType.Hills:
                     GameObject newTown = Instantiate(_chunkObjects[(int)ChunkObject.Town]);
-                    newTown.transform.position = newTownWSPos + new Vector3(0, 4, 0);
+                    newTown.transform.position = newTownWSPos + new Vector3(0, 2, 0);
                     newTown.transform.Rotate(Vector3.up, Random.Range(0, 180));
                     generatedTowns.Add(newTown);
                     break;
