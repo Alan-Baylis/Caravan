@@ -129,37 +129,32 @@ public class ChunkGenerator : MonoBehaviour
 
     private void OnMeshDataReceived(MeshData inMeshData, Chunk inChunk)
     {
-        if (inChunk.gameObject == null)
-            return;
+        Mesh chunkMesh = inChunk.gameObject.GetComponent<MeshFilter>().mesh;
 
-        inChunk.gameObject.GetComponent<MeshFilter>().mesh.name = "Terrain Mesh";
+        chunkMesh.name = "Terrain Mesh";
 
-        inChunk.gameObject.GetComponent<MeshFilter>().mesh.vertices = inMeshData.vertexCoords;
-        inChunk.gameObject.GetComponent<MeshFilter>().mesh.normals = inMeshData.normals;
-        inChunk.gameObject.GetComponent<MeshFilter>().mesh.uv = inMeshData.UVCoords;
+        chunkMesh.vertices = inMeshData.vertexCoords;
+        chunkMesh.normals = inMeshData.normals;
+        chunkMesh.uv = inMeshData.UVCoords;
+        chunkMesh.triangles = inMeshData.triVertIDs;
 
-        inChunk.gameObject.GetComponent<MeshFilter>().mesh.triangles = inMeshData.triVertIDs;
-
-        inChunk.gameObject.GetComponent<MeshFilter>().mesh.RecalculateNormals();
+        chunkMesh.RecalculateNormals();
     }
 
     private void OnTextureReceived(TextureData inTextureData, Chunk inChunk)
     {
-        if (inChunk.gameObject == null)
-            return;
+        Material chunkMeshMaterial = inChunk.gameObject.GetComponent<MeshRenderer>().material;
 
-        int chunkSize = _world.worldGenData.chunkSize;
+        if (!chunkMeshMaterial.mainTexture)
+        {
+            int chunkSize = _world.worldGenData.chunkSize;
+            chunkMeshMaterial.mainTexture = new Texture2D(chunkSize, chunkSize);
+        }
 
-        Texture2D texture = new Texture2D(chunkSize, chunkSize);
-        texture.filterMode = FilterMode.Trilinear;
-        texture.wrapMode = TextureWrapMode.Clamp;
-
-        int colorMapLength = inTextureData.colorMap.Length;
-        
-        texture.SetPixels(inTextureData.colorMap);
-        texture.Apply();
-
-        inChunk.gameObject.GetComponent<MeshRenderer>().material.mainTexture = texture;
+        ((Texture2D)chunkMeshMaterial.mainTexture).filterMode = FilterMode.Trilinear;
+        ((Texture2D)chunkMeshMaterial.mainTexture).wrapMode = TextureWrapMode.Clamp;
+        ((Texture2D)chunkMeshMaterial.mainTexture).SetPixels(inTextureData.colorMap);
+        ((Texture2D)chunkMeshMaterial.mainTexture).Apply();
     }
 
 
