@@ -132,18 +132,15 @@ public class ChunkGenerator : MonoBehaviour
         if (inChunk.gameObject == null)
             return;
 
-        Mesh newMesh = new Mesh();
-        newMesh.name = "Terrain Mesh";
+        inChunk.gameObject.GetComponent<MeshFilter>().mesh.name = "Terrain Mesh";
 
-        newMesh.vertices = inMeshData.vertexCoords;
-        newMesh.normals = inMeshData.normals;
-        newMesh.uv = inMeshData.UVCoords;
+        inChunk.gameObject.GetComponent<MeshFilter>().mesh.vertices = inMeshData.vertexCoords;
+        inChunk.gameObject.GetComponent<MeshFilter>().mesh.normals = inMeshData.normals;
+        inChunk.gameObject.GetComponent<MeshFilter>().mesh.uv = inMeshData.UVCoords;
 
-        newMesh.triangles = inMeshData.triVertIDs;
+        inChunk.gameObject.GetComponent<MeshFilter>().mesh.triangles = inMeshData.triVertIDs;
 
-        newMesh.RecalculateNormals();
-
-        inChunk.gameObject.GetComponent<MeshFilter>().mesh = newMesh;
+        inChunk.gameObject.GetComponent<MeshFilter>().mesh.RecalculateNormals();
     }
 
     private void OnTextureReceived(TextureData inTextureData, Chunk inChunk)

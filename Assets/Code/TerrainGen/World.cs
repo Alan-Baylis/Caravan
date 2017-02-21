@@ -28,13 +28,6 @@ public class WorldEditor : Editor
 public class World : MonoBehaviour
 {
     /* Member variables */
-    [SerializeField]
-    private WorldGenData _worldGenData;
-    public WorldGenData worldGenData
-    {
-        get { return _worldGenData; }
-    }
-
     [System.Serializable]
     public struct WorldGenData
     {
@@ -77,6 +70,13 @@ public class World : MonoBehaviour
         public float falloffLacunarity;
         public float falloffRedistribution;
     }
+    [SerializeField]
+    private WorldGenData _worldGenData;
+    public WorldGenData worldGenData
+    {
+        get { return _worldGenData; }
+    }
+
 
     private ChunkGenerator _chunkGenerator;
 
@@ -170,6 +170,9 @@ public class World : MonoBehaviour
     {
         while (_chunksToRemoveCoordsQueue.Count > 0)
         {
+            Destroy(_worldChunks[_chunksToRemoveCoordsQueue[0]].gameObject.GetComponent<MeshFilter>().mesh); // TODO: Remove when pooling is implemented
+            Destroy(_worldChunks[_chunksToRemoveCoordsQueue[0]].gameObject.GetComponent<MeshRenderer>().material);
+
             Destroy(_worldChunks[_chunksToRemoveCoordsQueue[0]].gameObject);
             _worldChunks.Remove(_chunksToRemoveCoordsQueue[0]);
             _chunksToRemoveCoordsQueue.RemoveAt(0);

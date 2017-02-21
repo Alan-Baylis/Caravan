@@ -116,7 +116,7 @@ Light:
   m_Enabled: 1
   serializedVersion: 7
   m_Type: 1
-  m_Color: {r: 0.975, g: 1, b: 0.99625, a: 1}
+  m_Color: {r: 0.9607843, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -125,7 +125,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.7
+    m_Strength: 0.75
     m_Bias: 0.1
     m_NormalBias: 0.7
     m_NearPlane: 0.1
@@ -464,7 +464,7 @@ MonoBehaviour:
     pineMin: 100
     pineMax: 500
     townMin: 0
-    townMax: 4
+    townMax: 3
 --- !u!1 &1501864685
 GameObject:
   m_ObjectHideFlags: 0
