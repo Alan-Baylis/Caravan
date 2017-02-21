@@ -28,8 +28,6 @@ public class WorldEditor : Editor
 public class World : MonoBehaviour
 {
     /* Member variables */
-    public HashSet<Vector2> previouslyGeneratedChunks = new HashSet<Vector2>();
-    
     [SerializeField]
     private WorldGenData _worldGenData;
     public WorldGenData worldGenData
@@ -88,6 +86,13 @@ public class World : MonoBehaviour
         get { return _biomeManager; }
     }
 
+    private ChunkObjectGenerator _chunkObjectGenerator;
+    public ChunkObjectGenerator chunkObjectGenerator
+    {
+        get { return _chunkObjectGenerator; }
+    }
+
+
     private Dictionary<Vector2, Chunk> _worldChunks = new Dictionary<Vector2, Chunk>();
     public Dictionary<Vector2, Chunk> worldChunks
     {
@@ -115,14 +120,12 @@ public class World : MonoBehaviour
     private bool _isGeneratingChunks = false;
 
 
-    [SerializeField] private GameObject _townPrefab;
-    [SerializeField] private GameObject _treePrefab;
-
     /* Start, Update */
     void Start()
     {
         _chunkGenerator = GetComponent<ChunkGenerator>();
         _biomeManager = GetComponent<BiomeManager>();
+        _chunkObjectGenerator = GetComponent<ChunkObjectGenerator>();
 
         _cameraControllerTransform = Camera.main.transform.parent;
     }
@@ -173,7 +176,7 @@ public class World : MonoBehaviour
         }
     }
 
-    private Vector2 GetChunkCoord(Vector3 inWorldPosition)
+    public Vector2 GetChunkCoord(Vector3 inWorldPosition)
     {
         Vector2 chunkCoords = new Vector2(inWorldPosition.x / _worldGenData.chunkSize, -(inWorldPosition.z / _worldGenData.chunkSize));
 
@@ -218,30 +221,6 @@ public class World : MonoBehaviour
     {
         foreach (Vector2 chunkCoord in _worldChunks.Keys)
             _chunkGenerator.RegenerateChunk(_worldChunks[chunkCoord]);
-    }
-
-    public GameObject GenerateTown(Vector3 inWorldPosition)
-    {
-        GameObject newTown = Instantiate(_townPrefab);
-
-        newTown.transform.position = inWorldPosition;
-
-        newTown.transform.SetParent(_worldChunks[GetChunkCoord(inWorldPosition)].gameObject.transform);
-
-        return newTown;
-    }
-    
-    public GameObject GenerateTree(Vector3 inWorldPosition)
-    {
-        GameObject newTree = Instantiate(_treePrefab);
-
-        newTree.transform.position = inWorldPosition;
-
-        newTree.isStatic = true;
-
-        newTree.transform.SetParent(_worldChunks[GetChunkCoord(inWorldPosition)].gameObject.transform);
-
-        return newTree;
     }
 }
 

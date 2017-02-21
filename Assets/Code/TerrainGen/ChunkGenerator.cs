@@ -72,7 +72,7 @@ public class ChunkGenerator : MonoBehaviour
                 _textureDataThreadInfoQueue.Dequeue()();
     }
 
-    private GameObject GenerateGO(Vector2 inChunkCoords)
+    private GameObject GenerateChunkGO(Vector2 inChunkCoords)
     {
         GameObject newGO = new GameObject(inChunkCoords.x + "," + inChunkCoords.y);
         newGO.AddComponent<MeshFilter>();
@@ -82,7 +82,6 @@ public class ChunkGenerator : MonoBehaviour
         newGO.GetComponent<MeshRenderer>().material.SetFloat("_Glossiness", 0.25f);
         return newGO;
     }
-
 
     // Request methods
     private void RequestNoiseData(Vector2 inChunkCoords, Chunk inChunk)
@@ -120,6 +119,8 @@ public class ChunkGenerator : MonoBehaviour
     private void OnNoiseDataReceived(NoiseData inNoiseData, Chunk inChunk)
     {
         inChunk.noiseData = inNoiseData;
+
+        _world.chunkObjectGenerator.GenerateChunkObjects(inChunk);
 
         RequestMeshData(inNoiseData, inChunk);
 
@@ -168,9 +169,10 @@ public class ChunkGenerator : MonoBehaviour
     /* External Methods */
     public Chunk GenerateChunk(Vector2 inChunkCoords)
     {
-        Chunk newChunk = new Chunk(inChunkCoords, GenerateGO(inChunkCoords), _world);
+        Chunk newChunk = new Chunk(inChunkCoords, GenerateChunkGO(inChunkCoords));
 
         RequestNoiseData(inChunkCoords, newChunk);
+
 
         return newChunk;
     }
