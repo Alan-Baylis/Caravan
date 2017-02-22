@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: 66c51293650c61a41915d7cc5caf8c4d
-timeCreated: 1487594085
-licenseType: Free
+guid: 8ce0e7da3d544994c8da204a589a2452
+timeCreated: 1487787436
+licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
@@ -10,7 +10,6 @@ ModelImporter:
     2300000: //RootNode
     3300000: //RootNode
     4300000: pine_top2
-    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
@@ -73,7 +72,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
