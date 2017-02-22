@@ -134,6 +134,8 @@ public class World : MonoBehaviour
     {
         currentCameraChunkCoord = GetChunkCoord(_cameraControllerTransform.position);
 
+        _worldGenData.GetHashCode();
+
         ProcessQueues();
     }
 
