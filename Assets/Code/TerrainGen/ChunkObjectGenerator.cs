@@ -56,11 +56,13 @@ public class ChunkObjectGenerator : MonoBehaviour
             int newTreePosX = Random.Range(0, inChunkSize);
             int newTreePosY = Random.Range(0, inChunkSize);
 
-            float targetTileNoiseHeight = inChunk.GetTileHeight(newTreePosX, newTreePosY);
-            if (_world.biomeManager.GetBiome(targetTileNoiseHeight).biomeType != BiomeType.Forest)
+            float targetHeight = inChunk.noiseData.heightMap.noise[newTreePosX, newTreePosY];
+            float targetHumidity = inChunk.noiseData.humidMap.noise[newTreePosX, newTreePosY];
+
+            if (_world.biomeManager.GetBiome(targetHeight, targetHumidity).biomeType != BiomeType.Forest)
                 continue;
 
-            float targetTileWSHeight = targetTileNoiseHeight * inHeightMultiplierCurve.Evaluate(targetTileNoiseHeight) * inMeshHeightMultiplier;
+            float targetTileWSHeight = targetHeight * inHeightMultiplierCurve.Evaluate(targetHeight) * inMeshHeightMultiplier;
 
             Vector3 newTreeWSPos = new Vector3(newTreePosX + (inChunkSize * inChunk.coords.x), targetTileWSHeight, newTreePosY - (inChunkSize * inChunk.coords.y));
 
@@ -119,12 +121,13 @@ public class ChunkObjectGenerator : MonoBehaviour
             int newTownPosX = Random.Range(0, inChunkSize);
             int newTownPosY = Random.Range(0, inChunkSize);
 
-            float targetTileNoiseHeight = inChunk.GetTileHeight(newTownPosX, newTownPosY);
-            float targetTileWSHeight = targetTileNoiseHeight * inHeightMultiplierCurve.Evaluate(targetTileNoiseHeight) * inMeshHeightMultiplier;
+            float targetHeight = inChunk.noiseData.heightMap.noise[newTownPosX, newTownPosY];
+            float targetTileWSHeight = targetHeight * inHeightMultiplierCurve.Evaluate(targetHeight) * inMeshHeightMultiplier;
 
+            float targetHumidity = inChunk.noiseData.humidMap.noise[newTownPosX, newTownPosY];
             Vector3 newTownWSPos = new Vector3(newTownPosX + (inChunkSize * inChunk.coords.x), targetTileWSHeight, newTownPosY - (inChunkSize * inChunk.coords.y));
 
-            switch (_world.biomeManager.GetBiome(targetTileNoiseHeight).biomeType)
+            switch (_world.biomeManager.GetBiome(targetHeight, targetHumidity).biomeType)
             {
                 case BiomeType.Forest:
                 case BiomeType.Plains:

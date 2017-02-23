@@ -6,7 +6,7 @@ public class BiomeManager : MonoBehaviour
 {
     public Biome[] _biomes;
 
-    public Biome GetBiome(float height /*, float temperature, float humidity */)
+    public Biome GetBiome(float height, /*float temperature,*/ float humidity)
     {
         if (height <= 0.01f) return _biomes[(int)BiomeType.Water_Deep];
         if (height <= 0.056f) return _biomes[(int)BiomeType.Water_Shallow];
@@ -14,8 +14,11 @@ public class BiomeManager : MonoBehaviour
         if (height > 0.771f) return _biomes[(int)BiomeType.Mountains_Snowy];
         if (height > 0.412f) return _biomes[(int)BiomeType.Mountains];
         if (height > 0.353f) return _biomes[(int)BiomeType.Hills];
-        if (height > 0.200f) return _biomes[(int)BiomeType.Plains];
-        if (height > 0.082f)  return _biomes[(int)BiomeType.Forest];
+        if (height > 0.082f)
+        {
+            if (humidity < 0.5f) return _biomes[(int)BiomeType.Plains];
+            else return _biomes[(int)BiomeType.Forest];
+        }
         if (height > 0.056f)  return _biomes[(int)BiomeType.Beach];
 
         else
