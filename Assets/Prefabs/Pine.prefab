@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4925280733721902}
   - component: {fileID: 33095942844318378}
   - component: {fileID: 23679481228127490}
-  - component: {fileID: 95213277598294278}
   m_Layer: 0
   m_Name: Pine
   m_TagString: Untagged
@@ -79,21 +78,4 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1156489930412784}
-  m_Mesh: {fileID: 4300000, guid: 66c51293650c61a41915d7cc5caf8c4d, type: 3}
---- !u!95 &95213277598294278
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1156489930412784}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 66c51293650c61a41915d7cc5caf8c4d, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
+  m_Mesh: {fileID: 4300000, guid: 8ce0e7da3d544994c8da204a589a2452, type: 3}
