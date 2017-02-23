@@ -374,12 +374,12 @@ MonoBehaviour:
     tempPersistance: 0
     tempLacunarity: 0
     tempRedistribution: 0
-    humidSeed: 0
-    humidScale: 0
-    humidOctaves: 0
-    humidPersistance: 0
-    humidLacunarity: 0
-    humidRedistribution: 0
+    humidSeed: 2
+    humidScale: 100
+    humidOctaves: 12
+    humidPersistance: 0.7
+    humidLacunarity: 1.42
+    humidRedistribution: 0.9
     heightSeed: 3
     heightScale: 160
     heightOctaves: 12

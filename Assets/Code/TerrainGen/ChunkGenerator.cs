@@ -400,13 +400,14 @@ public class TextureData
     {
         int textureSize = inWorldGenData.chunkSize;
         float[,] heightMap = inNoiseData.heightMap.noise;
+        float[,] humidMap = inNoiseData.humidMap.noise;
         BiomeManager biomeManager = inChunkGenerator.biomeManager;
 
         // Calculate colormap
         _colorMap = new Color[textureSize * textureSize];
         for (int y = 0; y < textureSize; y++)
             for (int x = 0; x < textureSize; x++)
-                _colorMap[y * textureSize + x] = biomeManager.GetBiome(heightMap[x, y]).color;
+                _colorMap[y * textureSize + x] = biomeManager.GetBiome(heightMap[x, y], humidMap[x,y]).color;
 
         lock (inChunkGenerator.textureDataThreadInfoQueue)
             inChunkGenerator.textureDataThreadInfoQueue.Enqueue(callback);
