@@ -114,7 +114,7 @@ public class Noise
         for (int y = 0; y < inFalloffNoiseData.parameters.size; y++)
             for (int x = 0; x < inFalloffNoiseData.parameters.size; x++)
             {
-                float vertexDistanceFromCenter = Mathf.Pow(inFalloffNoiseData.parameters.offsetX * inFalloffNoiseData.parameters.size + x, 2) + Mathf.Pow(inFalloffNoiseData.parameters.offsetY * inFalloffNoiseData.parameters.size - y, 2);
+                float vertexDistanceFromCenter = Mathf.Pow(inFalloffNoiseData.parameters.offsetX * inFalloffNoiseData.parameters.size + (x - 1 * inFalloffNoiseData.parameters.offsetX), 2) + Mathf.Pow(inFalloffNoiseData.parameters.offsetY * inFalloffNoiseData.parameters.size - (y + 1 * inFalloffNoiseData.parameters.offsetY), 2);
                 float normalizedDistance = Mathf.InverseLerp(0, 10000 * 100, vertexDistanceFromCenter);
 
                 inFalloffNoiseData.noise[x,y] += normalizedDistance;
